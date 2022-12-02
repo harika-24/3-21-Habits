@@ -1,11 +1,18 @@
+
+
 package edu.northeastern.a321habits.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import edu.northeastern.a321habits.Habit1;
+import edu.northeastern.a321habits.R;
+
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,6 +27,7 @@ public class HabitLogFragment extends Fragment {
 
     private PageViewModel pageViewModel;
     private FragmentHabitLogBinding binding;
+    private CardView activityCard1;
 
     public static HabitLogFragment newInstance(int index) {
         HabitLogFragment fragment = new HabitLogFragment();
@@ -47,6 +55,13 @@ public class HabitLogFragment extends Fragment {
 
         binding = FragmentHabitLogBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        activityCard1 = root.findViewById(R.id.cardView1);
+        activityCard1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), Habit1.class));
+            }
+        });
 
 //        final TextView textView = binding.sectionLabel;
 //        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

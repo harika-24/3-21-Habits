@@ -8,8 +8,9 @@
         <entry key="app/src/main/res/drawable-v24/home-48px.xml" value="0.1115" />
         <entry key="app/src/main/res/layout/activity_habit1.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/custom_new_activity.xml" value="0.30885416666666665" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/fragment_habit_log.xml" value="0.15520833333333334" />
+        <entry key="app/src/main/res/layout/fragment_habit_log.xml" value="0.31352132161458335" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.2849472045898438" />
         <entry key="app/src/main/res/menu/main.xml" value="0.1" />
       </map>

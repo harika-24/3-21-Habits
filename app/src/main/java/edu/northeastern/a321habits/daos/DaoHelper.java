@@ -1,4 +1,4 @@
-package edu.northeastern.a321habits.dao;
+package edu.northeastern.a321habits.daos;
 
 import android.util.Log;
 

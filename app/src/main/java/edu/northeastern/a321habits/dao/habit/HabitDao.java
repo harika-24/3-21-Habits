@@ -2,11 +2,8 @@ package edu.northeastern.a321habits.dao.habit;
 
 import static edu.northeastern.a321habits.dao.DaoHelper.callOnComplete;
 
-import android.util.Log;
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import edu.northeastern.a321habits.dao.FirestoreQueryCallback;
 

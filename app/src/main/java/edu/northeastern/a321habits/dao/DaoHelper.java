@@ -3,7 +3,6 @@ package edu.northeastern.a321habits.dao;
 import android.util.Log;
 
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class DaoHelper {
     private static final String TAG = "DaoHelper";

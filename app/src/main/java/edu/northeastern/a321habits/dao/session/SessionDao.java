@@ -2,11 +2,9 @@ package edu.northeastern.a321habits.dao.session;
 
 import static edu.northeastern.a321habits.dao.DaoHelper.callOnComplete;
 
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import edu.northeastern.a321habits.dao.FirestoreCallback;
 import edu.northeastern.a321habits.dao.FirestoreQueryCallback;
 
 public class SessionDao implements SessionDaoI {

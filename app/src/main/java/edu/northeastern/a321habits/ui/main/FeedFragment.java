@@ -94,12 +94,12 @@ public class FeedFragment extends Fragment {
         // todo: serialize response data into HabitLogModel objects
         // todo:
         feedRV.setVisibility(View.VISIBLE);
-
-        UserModel user = new UserModel("SWATI", "AGARWAL", "http://i.imgur.com/tGbaZCY.jpg");
+        String imageUrl = "https://i.imgur.com/tGbaZCY.jpg";
+        UserModel user = new UserModel("SWATI", "AGARWAL", imageUrl);
         habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
+        habitLogArrayList.add(new HabitLogModel("Read 10 pages", imageUrl, "12/2 7:00PM", 7, user));
         habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
-        habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
-        habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
+        habitLogArrayList.add(new HabitLogModel("Read 10 pages", imageUrl, "12/2 7:00PM", 7, user));
         habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
 
         // on below line we are adding our array list to our adapter class.

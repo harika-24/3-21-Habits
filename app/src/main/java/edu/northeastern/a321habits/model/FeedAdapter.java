@@ -3,6 +3,7 @@ package edu.northeastern.a321habits.model;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import edu.northeastern.a321habits.R;
 
@@ -46,7 +48,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         holder.logDateTimeTV.setText(habit_log.getCreatedAt());
         holder.dayNumTV.setText("DAY " + habit_log.getDay());
         Picasso.get().setLoggingEnabled(true);
-        Picasso.get().load(habit_log.getUser().getProfilePic()).into(holder.userProfilePicIV);
+
+        Picasso.get().load(habit_log.getUser().getProfilePic()).fit().centerCrop()
+                .placeholder(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
+                .error(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
+                .into(holder.userProfilePicIV);
+
+        // load image only if exists
+        String habitLogImage = habit_log.getImageURL();
+        if(!Objects.equals(habitLogImage, "")) {
+            Picasso.get().load(habitLogImage)
+                    .into(holder.habitLogImageIV);
+        }
+
     }
 
     @Override
@@ -58,15 +72,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         // creating variables for our text views.
         private final TextView userNameTV;
         private final ImageView userProfilePicIV;
+        private final ImageView habitLogImageIV;
         private final TextView logDateTimeTV;
         private final TextView habitTitleTV;
         private final TextView dayNumTV;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // initializing our text views.
             userNameTV = itemView.findViewById(R.id.user_name);
             userProfilePicIV = itemView.findViewById(R.id.img_user);
+            habitLogImageIV = itemView.findViewById(R.id.habit_log_image);
             logDateTimeTV = itemView.findViewById(R.id.log_date_time);
             habitTitleTV = itemView.findViewById(R.id.tv_logged_habit_title);
             dayNumTV = itemView.findViewById(R.id.tv_day_num);

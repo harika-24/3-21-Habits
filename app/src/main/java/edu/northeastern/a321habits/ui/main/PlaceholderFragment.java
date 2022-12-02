@@ -1,5 +1,6 @@
 package edu.northeastern.a321habits.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,12 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import edu.northeastern.a321habits.Habit1;
 import edu.northeastern.a321habits.R;
 import edu.northeastern.a321habits.databinding.FragmentMainBinding;
 
@@ -51,7 +54,14 @@ public class PlaceholderFragment extends Fragment {
 
         binding = FragmentMainBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        CardView activityCard1 = (CardView) root.findViewById(R.id.cardView1);
+        activityCard1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Habit1.class);
+                startActivity(intent);
+            }
+        });
 //        final TextView textView = binding.sectionLabel;
 //        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override

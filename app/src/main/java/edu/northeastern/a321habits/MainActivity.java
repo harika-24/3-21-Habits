@@ -1,9 +1,11 @@
 package edu.northeastern.a321habits;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import edu.northeastern.a321habits.ui.main.SectionsPagerAdapter;
@@ -19,6 +22,7 @@ import edu.northeastern.a321habits.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private CardView activityCard;
     private final int[] icons = {
             R.drawable.ic_home_black_24dp,
             R.drawable.ic_groups_black_24dp,
@@ -43,7 +47,14 @@ public class MainActivity extends AppCompatActivity {
             tabs.getTabAt(i).setIcon(icons[i]);
         }
 
-
+//        activityCard = (CardView) findViewById(R.id.cardView1);
+//
+//        activityCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(MainActivity.this,Habit1.class));
+//            }
+//        });
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

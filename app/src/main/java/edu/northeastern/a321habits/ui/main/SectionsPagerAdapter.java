@@ -29,7 +29,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        if (position == 0) {
+            return HabitLogFragment.newInstance(1);
+        }
+        else {
+            return FeedFragment.newInstance(2);
+        }
+
     }
 
     @Nullable
@@ -40,7 +46,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
+        // Show 2 total pages.
         return 2;
     }
 }

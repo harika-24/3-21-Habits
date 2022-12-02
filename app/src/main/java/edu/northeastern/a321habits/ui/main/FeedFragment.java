@@ -1,6 +1,5 @@
 package edu.northeastern.a321habits.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,42 +8,35 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import edu.northeastern.a321habits.Habit1;
 import edu.northeastern.a321habits.R;
-import edu.northeastern.a321habits.databinding.FragmentMainBinding;
+import edu.northeastern.a321habits.databinding.FragmentFeedBinding;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
+public class FeedFragment extends Fragment {
 
     private PageViewModel pageViewModel;
-    private FragmentMainBinding binding;
+    private FragmentFeedBinding binding;
 
-    public static PlaceholderFragment newInstance(int index) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
-        fragment.setArguments(bundle);
+    public static FeedFragment newInstance(int index) {
+        FeedFragment fragment = new FeedFragment();
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-        pageViewModel.setIndex(index);
+//        pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
+//        int index = 1;
+//        if (getArguments() != null) {
+//            index = getArguments().getInt(ARG_SECTION_NUMBER);
+//        }
+//        pageViewModel.setIndex(index);
     }
 
     @Override
@@ -52,16 +44,9 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        binding = FragmentMainBinding.inflate(inflater, container, false);
+        binding = FragmentFeedBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        CardView activityCard1 = (CardView) root.findViewById(R.id.cardView1);
-        activityCard1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), Habit1.class);
-                startActivity(intent);
-            }
-        });
+
 //        final TextView textView = binding.sectionLabel;
 //        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override

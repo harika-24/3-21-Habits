@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable-v24/groups-48px.xml" value="0.1115" />
         <entry key="app/src/main/res/drawable-v24/home-48px.xml" value="0.1115" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/feed_habit_item.xml" value="0.2955846150716146" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.16145833333333334" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.234375" />
         <entry key="app/src/main/res/menu/main.xml" value="0.1" />

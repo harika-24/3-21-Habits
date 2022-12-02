@@ -21,6 +21,7 @@ import edu.northeastern.a321habits.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
     private CardView activityCard;
     private final int[] icons = {

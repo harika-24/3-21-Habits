@@ -65,25 +65,26 @@ public class FeedFragment extends Fragment {
 
         feedRV.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
-//        nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                // on scroll change we are checking when users scroll as bottom.
-//                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-//                    // in this method we are incrementing page number,
-//                    // making progress bar visible and calling get data method.
-//                    count++;
-//                    // on below line we are making our progress bar visible.
-//                    loadingPB.setVisibility(View.VISIBLE);
-//                    if (count < 20) {
-//                        // on below line we are again calling
-//                        // a method to load data in our array list.
-//                        getData(root);
-//                    }
-//                }
-//            }
-//        });
         getData(root);
+        nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                // on scroll change we are checking when users scroll as bottom.
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    // in this method we are incrementing page number,
+                    // making progress bar visible and calling get data method.
+                    count++;
+                    // on below line we are making our progress bar visible.
+                    loadingPB.setVisibility(View.VISIBLE);
+                    if (count < 20) {
+                        // on below line we are again calling
+                        // a method to load data in our array list.
+                        getData(root);
+                    }
+                }
+            }
+        });
+//        getData(root);
         return root;
     }
 
@@ -92,7 +93,8 @@ public class FeedFragment extends Fragment {
         // todo: connect to database (this need not be a new connection)
         // todo: get all habit logs other than logged in users
         // todo: serialize response data into HabitLogModel objects
-        // todo:
+        // todo: format date into dd/mm hh:mm, maybe use relative time
+
         feedRV.setVisibility(View.VISIBLE);
         String imageUrl = "https://i.imgur.com/tGbaZCY.jpg";
         UserModel user = new UserModel("SWATI", "AGARWAL", imageUrl);

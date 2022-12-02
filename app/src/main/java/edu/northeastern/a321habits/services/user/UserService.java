@@ -1,21 +1,16 @@
 package edu.northeastern.a321habits.services.user;
 
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.Map;
 
 import edu.northeastern.a321habits.daos.FirestoreGetCallback;
-import edu.northeastern.a321habits.daos.FirestoreQueryCallback;
 import edu.northeastern.a321habits.daos.user.UserDao;
 import edu.northeastern.a321habits.daos.user.UserDaoI;
 import edu.northeastern.a321habits.models.user.User;
 import edu.northeastern.a321habits.services.ServiceGetCallback;
-import edu.northeastern.a321habits.services.ServiceQueryCallback;
 
 public class UserService implements UserServiceI{
     @Override
-    public void getUserById(String id, ServiceGetCallback callback) {
+    public void getUserById(String id, ServiceGetCallback<User> callback) {
         UserDaoI userDao = new UserDao();
         userDao.getUserById(id, new FirestoreGetCallback() {
             @Override

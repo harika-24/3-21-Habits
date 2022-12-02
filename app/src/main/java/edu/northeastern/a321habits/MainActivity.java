@@ -18,6 +18,7 @@ import edu.northeastern.a321habits.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
     private final int[] icons = {
             R.drawable.ic_home_black_24dp,

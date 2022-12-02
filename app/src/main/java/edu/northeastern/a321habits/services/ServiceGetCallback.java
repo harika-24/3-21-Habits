@@ -1,7 +1,7 @@
 package edu.northeastern.a321habits.services;
 
-public interface ServiceGetCallback {
-    void onGetExists(Object object);
+public interface ServiceGetCallback<T> {
+    void onGetExists(T object);
     void onGetDoesNotExist();
     void onFailure();
 }

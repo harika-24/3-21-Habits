@@ -20,14 +20,19 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import edu.northeastern.a321habits.databinding.FragmentHabitLogBinding;
+import edu.northeastern.a321habits.model.HabitLogAdapter;
+import edu.northeastern.a321habits.model.HabitLogModel;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -40,10 +45,14 @@ public class HabitLogFragment extends Fragment {
     private ImageView deleteIcon;
     private FragmentHabitLogBinding binding;
     private FloatingActionButton newActivityBtn;
-    private List<String> listOfHabits = new ArrayList<>();
-    private int noOfHabits = 0;
-    private List<CardView> listOfCards = new ArrayList<>();
-    private List<TextView> listOfActivityText = new ArrayList<>();
+    private HabitLogAdapter adapter;
+//    private List<String> listOfHabits = new ArrayList<>();
+//    private int noOfHabits = 0;
+//    private List<CardView> listOfCards = new ArrayList<>();
+//    private List<TextView> listOfActivityText = new ArrayList<>();
+
+    private RecyclerView recyclerView;
+    private ArrayList<HabitLogModel> habitList = new ArrayList<>();
 
     public static HabitLogFragment newInstance(int index) {
         HabitLogFragment fragment = new HabitLogFragment();
@@ -72,42 +81,10 @@ public class HabitLogFragment extends Fragment {
         binding = FragmentHabitLogBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        //populating listOfCardViews
-        listOfCards.add(root.findViewById(R.id.cardView1));
-        listOfCards.add(root.findViewById(R.id.cardView2));
-        listOfCards.add(root.findViewById(R.id.cardView3));
-
-        deleteIcon = root.findViewById(R.id.delete);
-        //populating listOfActivityText
-        listOfActivityText.add(root.findViewById(R.id.textView));
-        listOfActivityText.add(root.findViewById(R.id.textView2));
-        listOfActivityText.add(root.findViewById(R.id.textView3));
+        recyclerView = root.findViewById(R.id.habit_log);
 
         newActivityBtn = root.findViewById(R.id.floatingActionButton2);
 
-//        activityCard1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(getActivity(), Habit1.class));
-//            }
-//        });
-
-        deleteIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-             listOfHabits.remove(0);
-             noOfHabits--;
-             //resetting the cards
-             for(int i=0; i< listOfHabits.size(); i++){
-                 listOfActivityText.get(i).setText(listOfHabits.get(i));
-                 listOfCards.get(i).setVisibility(View.VISIBLE);
-             }
-             //hiding the unwanted cards
-             for(int i=listOfHabits.size(); i < 3; i++){
-                 listOfCards.get(i).setVisibility(View.INVISIBLE);
-             }
-            }
-        });
 
         newActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +92,16 @@ public class HabitLogFragment extends Fragment {
                 showActivityBox();
             }
         });
+
+        setAdapter();
         return root;
+    }
+
+    private void setAdapter() {
+        adapter = new HabitLogAdapter(binding.getRoot().getContext(),habitList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
     }
 
     void showActivityBox() {
@@ -135,26 +121,14 @@ public class HabitLogFragment extends Fragment {
             public void onClick(View v) {
                 String activityName = nameEt.getText().toString();
 
-                //checking if the activity is already entered
-                if (listOfHabits.stream().anyMatch(habit -> activityName.toLowerCase().equals(habit.toLowerCase())))
-                {
-                    //show that you are entering a duplicate
-                    dialog.dismiss();
-                    Toast.makeText(getActivity(), "Entering a Duplicate" , Toast.LENGTH_LONG).show();
-                    return;
-                }
-                noOfHabits++;
-                listOfHabits.add(activityName);
-                listOfActivityText.get(noOfHabits-1).setText(activityName);
-                listOfCards.get(noOfHabits -1).setVisibility(View.VISIBLE);
-
+                habitList.add(new HabitLogModel(activityName, null, new Date().toString(),1,null));
+                adapter.notifyItemInserted(habitList.size()-1);
+              //  adapter.notifyDataSetChanged();
                 dialog.dismiss();
-
-                //Check if we already have 3 habits, then the user cannot add another one and disabling the Floating
-                //Action Button.
-                if(noOfHabits == 3){
+                if (habitList.size() == 3) {
                     newActivityBtn.setVisibility(View.INVISIBLE);
                 }
+
             }
         });
         dialog.show();

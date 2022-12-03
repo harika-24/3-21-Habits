@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/layout/feed_habit_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_habit_log.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/habit_log_item.xml" value="0.30885416666666665" />
         <entry key="app/src/main/res/menu/main.xml" value="0.3098958333333333" />
       </map>
     </option>

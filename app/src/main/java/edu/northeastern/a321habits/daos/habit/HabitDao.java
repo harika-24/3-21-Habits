@@ -23,7 +23,7 @@ public class HabitDao implements HabitDaoI {
     }
 
     @Override
-    public void getHabitsOfSession(String sessionId, FirestoreQueryCallback callback) {
+    public void findHabitsOfSession(String sessionId, FirestoreQueryCallback callback) {
         Query query = db.collection(COLLECTION).whereEqualTo("sessionId", sessionId);
         callOnComplete(query, callback);
     }

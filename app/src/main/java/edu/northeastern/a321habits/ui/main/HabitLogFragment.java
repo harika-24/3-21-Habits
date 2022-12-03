@@ -20,10 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +90,27 @@ public class HabitLogFragment extends Fragment {
             }
         });
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)
+        {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                View parentLayout = root;
+                Snackbar snackMessage = Snackbar.make(parentLayout, "Link Deleted", Snackbar.LENGTH_LONG).setAction("Action", null);
+                View snackView = snackMessage.getView();
+                TextView tView = snackView.findViewById(com.google.android.material.R.id.snackbar_text);
+                tView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                snackMessage.show();
+                int pos = viewHolder.getLayoutPosition();
+                habitList.remove(pos);
+                adapter.notifyItemRemoved(pos);
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         setAdapter();
         return root;
     }

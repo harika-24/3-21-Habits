@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.northeastern.a321habits.Habit1;
 import edu.northeastern.a321habits.R;
@@ -38,13 +39,7 @@ public class HabitLogFragment extends Fragment {
 
     private PageViewModel pageViewModel;
     private FragmentHabitLogBinding binding;
-    private CardView activityCard1;
-    private CardView activityCard2;
-    private CardView activityCard3;
     private FloatingActionButton newActivityBtn;
-    private TextView activity1Txt;
-    private TextView activity2Txt;
-    private TextView activity3Txt;
     private List<String> listOfHabits = new ArrayList<>();
     private int noOfHabits = 0;
     private List<CardView> listOfCards = new ArrayList<>();
@@ -102,10 +97,6 @@ public class HabitLogFragment extends Fragment {
                 showActivityBox();
             }
         });
-
-
-
-
         return root;
     }
 
@@ -126,12 +117,12 @@ public class HabitLogFragment extends Fragment {
             public void onClick(View v) {
                 String activityName = nameEt.getText().toString();
 
-                //check if we already have 3 habits, then the user cannot add another one.
-
-                //check if the activity is already entered
-                if (listOfHabits.stream().anyMatch(habit -> activityName.toLowerCase(Locale.ROOT) == habit.toLowerCase(Locale.ROOT) ))
+                //checking if the activity is already entered
+                if (listOfHabits.stream().anyMatch(habit -> activityName.toLowerCase().equals(habit.toLowerCase())))
                 {
                     //show that you are entering a duplicate
+                    dialog.dismiss();
+                    Toast.makeText(getActivity(), "Entering a Duplicate" , Toast.LENGTH_LONG).show();
                     return;
                 }
                 noOfHabits++;
@@ -141,12 +132,13 @@ public class HabitLogFragment extends Fragment {
 
                 dialog.dismiss();
 
+                //Check if we already have 3 habits, then the user cannot add another one and disabling the Floating
+                //Action Button.
                 if(noOfHabits == 3){
                     newActivityBtn.setVisibility(View.INVISIBLE);
                 }
             }
         });
-
         dialog.show();
     }
     @Override

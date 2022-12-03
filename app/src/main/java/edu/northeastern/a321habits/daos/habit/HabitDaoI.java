@@ -7,7 +7,7 @@ import edu.northeastern.a321habits.models.habit.Habit;
 import edu.northeastern.a321habits.models.habit.HabitProgress;
 
 public interface HabitDaoI {
-    void getHabitsOfSession(String sessionId, FirestoreQueryCallback callback);
+    void findHabitsOfSession(String sessionId, FirestoreQueryCallback callback);
     void getProgressOfHabit(String habitId, FirestoreQueryCallback callback);
     void createHabit(Habit habit, FirestoreAddCallback callback);
     void deleteHabit(String habitId, FirestoreDeleteCallback callback);

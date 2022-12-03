@@ -46,11 +46,6 @@ public class HabitLogFragment extends Fragment {
     private FragmentHabitLogBinding binding;
     private FloatingActionButton newActivityBtn;
     private HabitLogAdapter adapter;
-//    private List<String> listOfHabits = new ArrayList<>();
-//    private int noOfHabits = 0;
-//    private List<CardView> listOfCards = new ArrayList<>();
-//    private List<TextView> listOfActivityText = new ArrayList<>();
-
     private RecyclerView recyclerView;
     private ArrayList<HabitLogModel> habitList = new ArrayList<>();
 

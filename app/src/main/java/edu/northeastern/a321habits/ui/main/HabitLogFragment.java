@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import edu.northeastern.a321habits.Habit1;
 import edu.northeastern.a321habits.R;
@@ -21,6 +22,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import edu.northeastern.a321habits.databinding.FragmentHabitLogBinding;
 
@@ -34,7 +39,16 @@ public class HabitLogFragment extends Fragment {
     private PageViewModel pageViewModel;
     private FragmentHabitLogBinding binding;
     private CardView activityCard1;
-    private FloatingActionButton newActivity;
+    private CardView activityCard2;
+    private CardView activityCard3;
+    private FloatingActionButton newActivityBtn;
+    private TextView activity1Txt;
+    private TextView activity2Txt;
+    private TextView activity3Txt;
+    private List<String> listOfHabits = new ArrayList<>();
+    private int noOfHabits = 0;
+    private List<CardView> listOfCards = new ArrayList<>();
+    private List<TextView> listOfActivityText = new ArrayList<>();
 
     public static HabitLogFragment newInstance(int index) {
         HabitLogFragment fragment = new HabitLogFragment();
@@ -62,30 +76,36 @@ public class HabitLogFragment extends Fragment {
 
         binding = FragmentHabitLogBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        activityCard1 = root.findViewById(R.id.cardView1);
-        newActivity = root.findViewById(R.id.floatingActionButton2);
 
-        activityCard1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), Habit1.class));
-            }
-        });
+        //populating listOfCardViews
+        listOfCards.add(root.findViewById(R.id.cardView1));
+        listOfCards.add(root.findViewById(R.id.cardView2));
+        listOfCards.add(root.findViewById(R.id.cardView3));
 
-        newActivity.setOnClickListener(new View.OnClickListener() {
+        //populating listOfActivityText
+        listOfActivityText.add(root.findViewById(R.id.textView));
+        listOfActivityText.add(root.findViewById(R.id.textView2));
+        listOfActivityText.add(root.findViewById(R.id.textView3));
+
+        newActivityBtn = root.findViewById(R.id.floatingActionButton2);
+
+//        activityCard1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getActivity(), Habit1.class));
+//            }
+//        });
+
+        newActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showActivityBox();
             }
         });
 
-//        final TextView textView = binding.sectionLabel;
-//        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
+
+
+
         return root;
     }
 
@@ -104,7 +124,26 @@ public class HabitLogFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String activityName = nameEt.getText().toString();
+
+                //check if we already have 3 habits, then the user cannot add another one.
+
+                //check if the activity is already entered
+                if (listOfHabits.stream().anyMatch(habit -> activityName.toLowerCase(Locale.ROOT) == habit.toLowerCase(Locale.ROOT) ))
+                {
+                    //show that you are entering a duplicate
+                    return;
+                }
+                noOfHabits++;
+                listOfHabits.add(activityName);
+                listOfActivityText.get(noOfHabits-1).setText(activityName);
+                listOfCards.get(noOfHabits -1).setVisibility(View.VISIBLE);
+
                 dialog.dismiss();
+
+                if(noOfHabits == 3){
+                    newActivityBtn.setVisibility(View.INVISIBLE);
+                }
             }
         });
 

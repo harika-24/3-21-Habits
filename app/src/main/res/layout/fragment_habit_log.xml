@@ -11,8 +11,10 @@
         android:id="@+id/cardView1"
         android:layout_width="395dp"
         android:layout_height="172dp"
-        android:layout_margin="10dp"
+        android:layout_margin="4dp"
+        android:layout_marginTop="16dp"
         android:clickable="true"
+        android:visibility="invisible"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
@@ -22,61 +24,215 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:src="@drawable/ic_check" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/camera"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="21dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="21dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_toStartOf="@id/check"
-                        android:layout_toEndOf="@+id/notes"
-                        android:src="@drawable/ic_camera" />
+                <ImageView
+                    android:id="@+id/check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_check" />
 
-                    <ImageView
-                        android:id="@+id/notes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="19dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_toEndOf="@+id/textView"
-                        android:src="@drawable/ic_chat_unread" />
+                <ImageView
+                    android:id="@+id/camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="21dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toStartOf="@id/check"
+                    android:layout_toEndOf="@+id/notes"
+                    android:src="@drawable/ic_camera" />
 
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="110dp"
-                        android:layout_height="29dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="21dp"
-                        android:layout_marginTop="12dp"
-                        android:text="Walking"
-                        android:textColor="#D53B6F"
-                        android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/notes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="39dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="19dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toEndOf="@+id/textView"
+                    android:src="@drawable/ic_chat_unread" />
 
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="110dp"
+                    android:layout_height="29dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#D53B6F"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
         </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="395dp"
+        android:layout_height="172dp"
+        android:layout_margin="4dp"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/check2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_check" />
+
+                <ImageView
+                    android:id="@+id/camera2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="21dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toStartOf="@id/check2"
+                    android:layout_toEndOf="@+id/notes2"
+                    android:src="@drawable/ic_camera" />
+
+                <ImageView
+                    android:id="@+id/notes2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="39dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="19dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toEndOf="@+id/textView2"
+                    android:src="@drawable/ic_chat_unread" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="110dp"
+                    android:layout_height="29dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#D53B6F"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
+        android:layout_width="395dp"
+        android:layout_height="172dp"
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/check3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_check" />
+
+                <ImageView
+                    android:id="@+id/camera3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="21dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toStartOf="@id/check3"
+                    android:layout_toEndOf="@+id/notes3"
+                    android:src="@drawable/ic_camera" />
+
+                <ImageView
+                    android:id="@+id/notes3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="39dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="19dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toEndOf="@+id/textView3"
+                    android:src="@drawable/ic_chat_unread" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="110dp"
+                    android:layout_height="29dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#D53B6F"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
 
     </androidx.cardview.widget.CardView>
 

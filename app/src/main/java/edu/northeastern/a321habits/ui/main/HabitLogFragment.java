@@ -1,5 +1,3 @@
-
-
 package edu.northeastern.a321habits.ui.main;
 
 import android.app.Dialog;
@@ -11,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +37,7 @@ public class HabitLogFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private PageViewModel pageViewModel;
+    private ImageView deleteIcon;
     private FragmentHabitLogBinding binding;
     private FloatingActionButton newActivityBtn;
     private List<String> listOfHabits = new ArrayList<>();
@@ -77,6 +77,7 @@ public class HabitLogFragment extends Fragment {
         listOfCards.add(root.findViewById(R.id.cardView2));
         listOfCards.add(root.findViewById(R.id.cardView3));
 
+        deleteIcon = root.findViewById(R.id.delete);
         //populating listOfActivityText
         listOfActivityText.add(root.findViewById(R.id.textView));
         listOfActivityText.add(root.findViewById(R.id.textView2));
@@ -90,6 +91,23 @@ public class HabitLogFragment extends Fragment {
 //                startActivity(new Intent(getActivity(), Habit1.class));
 //            }
 //        });
+
+        deleteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+             listOfHabits.remove(0);
+             noOfHabits--;
+             //resetting the cards
+             for(int i=0; i< listOfHabits.size(); i++){
+                 listOfActivityText.get(i).setText(listOfHabits.get(i));
+                 listOfCards.get(i).setVisibility(View.VISIBLE);
+             }
+             //hiding the unwanted cards
+             for(int i=listOfHabits.size(); i < 3; i++){
+                 listOfCards.get(i).setVisibility(View.INVISIBLE);
+             }
+            }
+        });
 
         newActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override

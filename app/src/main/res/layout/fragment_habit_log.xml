@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="10dp"
+                    android:clickable="true"
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="10dp"
@@ -49,6 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="21dp"
+                    android:clickable="true"
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="21dp"
                     android:layout_marginBottom="10dp"
@@ -61,11 +63,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="39dp"
+                    android:clickable="true"
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="19dp"
                     android:layout_marginBottom="10dp"
                     android:layout_toEndOf="@+id/textView"
                     android:src="@drawable/ic_chat_unread" />
+
+                <ImageView
+                    android:id="@+id/delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/check"
+                    android:clickable="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="26dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_delete" />
 
                 <TextView
                     android:id="@+id/textView"
@@ -80,7 +96,6 @@
 
             </RelativeLayout>
         </LinearLayout>
-
 
 
     </androidx.cardview.widget.CardView>

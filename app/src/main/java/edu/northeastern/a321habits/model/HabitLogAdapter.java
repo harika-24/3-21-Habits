@@ -49,11 +49,14 @@ public class HabitLogAdapter extends RecyclerView.Adapter <HabitLogAdapter.ViewH
         // creating variables for our text views.
         private final TextView activityName;
         private final ImageView cameraIcon;
+        private final ImageView notesIcon;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // initializing our text views.
            activityName = itemView.findViewById(R.id.textView);
            cameraIcon = itemView.findViewById(R.id.camera);
+           notesIcon = itemView.findViewById(R.id.notes);
+
            cameraIcon.setOnClickListener(new View.OnClickListener(){
                @Override
                public void onClick(View v)
@@ -62,6 +65,14 @@ public class HabitLogAdapter extends RecyclerView.Adapter <HabitLogAdapter.ViewH
                }
 
            });
+
+           notesIcon.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   clickListeners.onNoteIconClicked(getAdapterPosition());
+               }
+           });
+
         }
     }
 }

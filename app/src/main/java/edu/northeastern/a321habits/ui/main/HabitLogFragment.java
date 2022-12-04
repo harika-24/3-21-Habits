@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -48,6 +50,7 @@ public class HabitLogFragment extends Fragment {
     private HabitLogAdapter adapter;
     private RecyclerView recyclerView;
     private ArrayList<HabitLogModel> habitList = new ArrayList<>();
+    private String notes;
 
     public static HabitLogFragment newInstance(int index) {
         HabitLogFragment fragment = new HabitLogFragment();
@@ -154,6 +157,31 @@ public class HabitLogFragment extends Fragment {
 
             @Override
             public void onNoteIconClicked(int position) {
+                final Dialog noteDialog = new Dialog(getActivity());
+                noteDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
+                noteDialog.setCancelable(true);
+                //Mention the name of the layout of your custom dialog.
+                noteDialog.setContentView(R.layout.custom_note);
+                final EditText noteText = noteDialog.findViewById(R.id.editTextTextMultiLine);
+                noteText.setText(notes);
+                Button submitNoteButton = noteDialog.findViewById(R.id.note_submit_button);
+                submitNoteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String text = noteText.getText().toString();
+                        if (text.isEmpty()) {
+                            noteDialog.dismiss();
+                            Toast.makeText(getActivity(), "Note can't be empty", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        notes = text;
+                        Toast.makeText(getActivity(), "Note Added", Toast.LENGTH_LONG).show();
+                        noteText.setText("");
+                        noteDialog.dismiss();
+                    }
+                });
+                noteDialog.show();
 
             }
         });

@@ -18,10 +18,12 @@ public class HabitLogAdapter extends RecyclerView.Adapter <HabitLogAdapter.ViewH
 
     private Context context;
     private ArrayList<HabitLogModel> habitList = new ArrayList<>();
+    private final ClickListener clickListeners;
 
-    public HabitLogAdapter(Context context, ArrayList<HabitLogModel> habitList) {
+    public HabitLogAdapter(Context context, ArrayList<HabitLogModel> habitList, ClickListener listener) {
         this.context = context;
         this.habitList = habitList;
+        this.clickListeners = listener;
     }
 
 
@@ -46,10 +48,20 @@ public class HabitLogAdapter extends RecyclerView.Adapter <HabitLogAdapter.ViewH
     public class ViewHolder extends RecyclerView.ViewHolder {
         // creating variables for our text views.
         private final TextView activityName;
+        private final ImageView cameraIcon;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // initializing our text views.
            activityName = itemView.findViewById(R.id.textView);
+           cameraIcon = itemView.findViewById(R.id.camera);
+           cameraIcon.setOnClickListener(new View.OnClickListener(){
+               @Override
+               public void onClick(View v)
+               {
+                   clickListeners.onCameraIconClicked(getAdapterPosition());
+               }
+
+           });
         }
     }
 }

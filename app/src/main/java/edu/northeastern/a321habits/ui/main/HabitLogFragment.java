@@ -15,11 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import edu.northeastern.a321habits.Habit1;
 import edu.northeastern.a321habits.R;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -31,10 +29,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import edu.northeastern.a321habits.databinding.FragmentHabitLogBinding;
+import edu.northeastern.a321habits.model.ClickListener;
 import edu.northeastern.a321habits.model.HabitLogAdapter;
 import edu.northeastern.a321habits.model.HabitLogModel;
 
@@ -46,7 +43,6 @@ public class HabitLogFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private PageViewModel pageViewModel;
-    private ImageView deleteIcon;
     private FragmentHabitLogBinding binding;
     private FloatingActionButton newActivityBtn;
     private HabitLogAdapter adapter;
@@ -149,7 +145,18 @@ public class HabitLogFragment extends Fragment {
     }
 
     private void setAdapter() {
-        adapter = new HabitLogAdapter(binding.getRoot().getContext(),habitList);
+        adapter = new HabitLogAdapter(binding.getRoot().getContext(), habitList, new ClickListener() {
+            @Override
+            public void onCameraIconClicked(int position) {
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                startActivity(intent);
+            }
+
+            @Override
+            public void onNoteIconClicked(int position) {
+
+            }
+        });
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

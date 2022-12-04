@@ -1,6 +1,8 @@
 package edu.northeastern.a321habits.ui.main;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -99,15 +101,46 @@ public class HabitLogFragment extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                View parentLayout = root;
-                Snackbar snackMessage = Snackbar.make(parentLayout, "Link Deleted", Snackbar.LENGTH_LONG).setAction("Action", null);
-                View snackView = snackMessage.getView();
-                TextView tView = snackView.findViewById(com.google.android.material.R.id.snackbar_text);
-                tView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                snackMessage.show();
-                int pos = viewHolder.getLayoutPosition();
-                habitList.remove(pos);
-                adapter.notifyItemRemoved(pos);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure you want to delete the Habit?");
+
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        View parentLayout = root;
+                        Snackbar snackMessage = Snackbar.make(parentLayout, "Habit Deleted", Snackbar.LENGTH_LONG).setAction("Action", null);
+                        View snackView = snackMessage.getView();
+                        TextView tView = snackView.findViewById(com.google.android.material.R.id.snackbar_text);
+                        tView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        snackMessage.show();
+                        int pos = viewHolder.getLayoutPosition();
+                        habitList.remove(pos);
+                        adapter.notifyItemRemoved(pos);
+                        if (habitList.size() != 3) {
+                            newActivityBtn.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int pos = viewHolder.getLayoutPosition();
+                        HabitLogModel element = habitList.get(pos);
+                        habitList.add(pos,element);
+                        adapter.notifyItemInserted(pos);
+                        habitList.remove(pos+1);
+                        adapter.notifyItemRemoved(pos+1);
+                        if (habitList.size() != 3) {
+                            newActivityBtn.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.setCancelable(true);
+                alert.show();
+
             }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -138,6 +171,11 @@ public class HabitLogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String activityName = nameEt.getText().toString();
+                if (activityName.isEmpty()) {
+                    dialog.dismiss();
+                    Toast.makeText(getActivity(), "Habit can't be empty", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 habitList.add(new HabitLogModel(activityName, null, new Date().toString(),1,null));
                 adapter.notifyItemInserted(habitList.size()-1);

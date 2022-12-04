@@ -1,23 +1,23 @@
 package edu.northeastern.a321habits;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.cardview.widget.CardView;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import edu.northeastern.a321habits.ui.main.SectionsPagerAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
 import edu.northeastern.a321habits.databinding.ActivityMainBinding;
+import edu.northeastern.a321habits.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this,
+                getSupportFragmentManager());
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
@@ -89,6 +90,16 @@ public class MainActivity extends AppCompatActivity {
 
             // Do something
             Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (id == R.id.action_item_logout) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            sharedPref
+                    .edit().remove(getString(R.string.saved_logged_in_handle_key)).commit();
+            startActivity(new Intent(this, LoginActivity.class));
+            // Do something
+            Toast.makeText(this, "Logged out successfully.", Toast.LENGTH_SHORT).show();
             return true;
         }
 

@@ -2,4 +2,6 @@
     <string name="app_name">3-21 Habits</string>
     <string name="tab_text_1">Habits</string>
     <string name="tab_text_2">Feed</string>
+    <string name="saved_logged_in_handle_key">SAVED_LOGGED_IN_USER</string>
+    <string name="saved_default_handle">DEFAULT_USER</string>
 </resources>

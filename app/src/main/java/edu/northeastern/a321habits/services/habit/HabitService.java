@@ -6,7 +6,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import edu.northeastern.a321habits.daos.FireStoreUpdateCallback;
 import edu.northeastern.a321habits.daos.FirestoreAddCallback;
 import edu.northeastern.a321habits.daos.FirestoreDeleteCallback;
 import edu.northeastern.a321habits.daos.FirestoreQueryCallback;
@@ -16,6 +18,7 @@ import edu.northeastern.a321habits.models.habit.HabitProgress;
 import edu.northeastern.a321habits.services.ServiceAddCallback;
 import edu.northeastern.a321habits.services.ServiceDeleteCallback;
 import edu.northeastern.a321habits.services.ServiceQueryCallback;
+import edu.northeastern.a321habits.services.ServiceUpdateCallback;
 
 public class HabitService implements HabitServiceI {
 
@@ -154,6 +157,21 @@ public class HabitService implements HabitServiceI {
 
             @Override
             public void failure() {
+                callback.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void updateHabitProgress(String id, Map<String, Object> updateObject, ServiceUpdateCallback callback) {
+        habitDao.updateHabitProgress(id, updateObject, new FireStoreUpdateCallback() {
+            @Override
+            public void onUpdate() {
+                callback.onUpdated();
+            }
+
+            @Override
+            public void onFailure() {
                 callback.onFailure();
             }
         });

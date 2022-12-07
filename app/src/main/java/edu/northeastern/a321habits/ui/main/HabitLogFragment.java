@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.google.firebase.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,7 @@ import edu.northeastern.a321habits.databinding.FragmentHabitLogBinding;
 import edu.northeastern.a321habits.model.ClickListener;
 import edu.northeastern.a321habits.model.HabitLogAdapter;
 import edu.northeastern.a321habits.models.habit.Habit;
+import edu.northeastern.a321habits.models.habit.HabitProgress;
 import edu.northeastern.a321habits.models.session.Session;
 import edu.northeastern.a321habits.services.ServiceAddCallback;
 import edu.northeastern.a321habits.services.ServiceDeleteCallback;
@@ -238,23 +241,60 @@ public class HabitLogFragment extends Fragment {
                 final EditText noteText = noteDialog.findViewById(R.id.editTextTextMultiLine);
                 noteText.setText(notes);
                 Button submitNoteButton = noteDialog.findViewById(R.id.note_submit_button);
-                submitNoteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String text = noteText.getText().toString();
-                        if (text.isEmpty()) {
-                            noteDialog.dismiss();
-                            Toast.makeText(getActivity(), "Note can't be empty", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        notes = text;
-                        Toast.makeText(getActivity(), "Note Added", Toast.LENGTH_LONG).show();
-                        noteText.setText("");
+                submitNoteButton.setOnClickListener(view -> {
+                    String text = noteText.getText().toString();
+                    if (text.isEmpty()) {
                         noteDialog.dismiss();
+                        Toast.makeText(getActivity(), "Note can't be empty", Toast.LENGTH_LONG).show();
+                        return;
                     }
+                    notes = text;
+                    HabitServiceI habitService = new HabitService(new HabitDao());
+                    Habit habit = habits.get(position);
+                    Map<String, Object> updateObject = new HashMap<>();
+                    updateObject.put("note", notes);
+                    habitService.updateHabitProgress(habit.getId(), updateObject, new ServiceUpdateCallback() {
+                        @Override
+                        public void onUpdated() {
+                            Toast.makeText(getActivity(), "Note Added", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFailure() {
+                            Toast.makeText(getActivity(), "Could not add/update note. Try again", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    noteText.setText("");
+                    noteDialog.dismiss();
                 });
                 noteDialog.show();
 
+            }
+
+            @Override
+            public void onCheckIconClicked(int adapterPosition, ImageView checkIcon) {
+                Habit habit = habits.get(adapterPosition);
+                HabitServiceI habitService = new HabitService(new HabitDao());
+                String currentUserHandle = SharedPrefUtil.getHandleOfLoggedInUser(getContext());
+                HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
+                        null, new Timestamp(new Date()),
+                        true, null, currentUserHandle,habit.getName());
+                habitService.addProgressToHabit(habitProgress, currentUserHandle, new ServiceAddCallback() {
+                    @Override
+                    public void onCreated(String uniqueId) {
+                        Toast.makeText(getContext(), "Added today's log to habit.",
+                                Toast.LENGTH_SHORT).show();
+                        checkIcon.setVisibility(View.INVISIBLE);
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getContext(), "Could not add today's " +
+                                "log to habit. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext());

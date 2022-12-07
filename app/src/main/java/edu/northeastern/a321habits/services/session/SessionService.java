@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.northeastern.a321habits.daos.FireStoreUpdateCallback;
 import edu.northeastern.a321habits.daos.FirestoreAddCallback;
 import edu.northeastern.a321habits.daos.FirestoreDeleteCallback;
 import edu.northeastern.a321habits.daos.FirestoreGetCallback;
@@ -18,6 +19,7 @@ import edu.northeastern.a321habits.services.ServiceAddCallback;
 import edu.northeastern.a321habits.services.ServiceDeleteCallback;
 import edu.northeastern.a321habits.services.ServiceGetCallback;
 import edu.northeastern.a321habits.services.ServiceQueryCallback;
+import edu.northeastern.a321habits.services.ServiceUpdateCallback;
 
 public class SessionService implements SessionServiceI {
 
@@ -36,7 +38,8 @@ public class SessionService implements SessionServiceI {
                 for(QueryDocumentSnapshot document: snapshot) {
                     sessions.add(new Session(document.getId(),document.getString("userId"),
                             document.getTimestamp("startDate"),
-                            document.getTimestamp("endDate")));
+                            document.getTimestamp("endDate"),
+                            Boolean.TRUE.equals(document.getBoolean("hasEnded"))));
                 }
                 callback.onObjectsExist(sessions);
             }
@@ -54,7 +57,7 @@ public class SessionService implements SessionServiceI {
             @Override
             public void onDocumentExists(Map<String, Object> value) {
                 Session session = new Session(sessionId ,value.get("userId"),
-                        value.get("startDate"), value.get("endDate"));
+                        value.get("startDate"), value.get("endDate"), (boolean) value.get("hasEnded"));
                 callback.onGetExists(session);
             }
 
@@ -96,6 +99,43 @@ public class SessionService implements SessionServiceI {
             @Override
             public void onFailure(Exception e) {
                 callback.onFailure(e);
+            }
+        });
+    }
+
+    @Override
+    public void updateSession(Map<String, Object> updateObject, ServiceUpdateCallback callback) {
+        sessionDao.updateSession(updateObject, new FireStoreUpdateCallback() {
+            @Override
+            public void onUpdate() {
+                callback.onUpdated();
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void getCurrentSession(String currentUser, ServiceQueryCallback<Session> callback) {
+        sessionDao.getCurrentSession(currentUser, new FirestoreQueryCallback() {
+            @Override
+            public void onQuerySucceeds(QuerySnapshot snapshot) {
+                List<Session> sessions = new ArrayList<>();
+                for (QueryDocumentSnapshot document: snapshot) {
+                    sessions.add(new Session(document.getId(), document.getString("userId"),
+                            document.getTimestamp("startDate"),
+                            document.getTimestamp("endDate"),
+                            Boolean.TRUE.equals(document.getBoolean("hasEnded"))));
+                }
+                callback.onObjectsExist(sessions);
+            }
+
+            @Override
+            public void failure() {
+                callback.onFailure();
             }
         });
     }

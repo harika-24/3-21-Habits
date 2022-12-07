@@ -11,17 +11,19 @@ public class Session {
     private String userId;
     private Timestamp startDate;
     private Timestamp endDate;
+    private boolean hasEnded;
 
     public Session() {}
 
-    public Session(String sessionId, String userId, Timestamp startDate, Timestamp endDate) {
+    public Session(String sessionId, String userId, Timestamp startDate, Timestamp endDate, boolean hasEnded) {
         this.sessionId = sessionId;
         this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.hasEnded = hasEnded;
     }
 
-    public Session(Object sessionId, Object userId, Object startDate, Object endDate) {
+    public Session(Object sessionId, Object userId, Object startDate, Object endDate, boolean hasEnded) {
         try {
             if (sessionId != null) {
                 this.sessionId = sessionId.toString();
@@ -35,6 +37,7 @@ public class Session {
             if (endDate != null) {
                 this.endDate = (Timestamp) endDate;
             }
+            this.hasEnded = hasEnded;
         } catch (ClassCastException cce) {
             Log.d(TAG, "Issue while casting Map object data in constructor.");
         }
@@ -53,6 +56,10 @@ public class Session {
         return endDate;
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
     @Override
     public String toString() {
         return "Session{" +
@@ -61,5 +68,9 @@ public class Session {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 '}';
+    }
+
+    public boolean isHasEnded() {
+        return hasEnded;
     }
 }

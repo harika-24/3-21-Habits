@@ -1,9 +1,7 @@
 package edu.northeastern.a321habits;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -94,11 +92,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_item_logout) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            sharedPref
-                    .edit().remove(getString(R.string.saved_logged_in_handle_key)).commit();
+            SharedPrefUtil.clearAll(getApplicationContext());
             startActivity(new Intent(this, LoginActivity.class));
-            // Do something
             Toast.makeText(this, "Logged out successfully.", Toast.LENGTH_SHORT).show();
             return true;
         }

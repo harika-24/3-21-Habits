@@ -11,18 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.northeastern.a321habits.R;
+import edu.northeastern.a321habits.models.habit.Habit;
 
 public class HabitLogAdapter extends RecyclerView.Adapter <HabitLogAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<HabitLogModel> habitList = new ArrayList<>();
+    private List<Habit> habits;
     private final ClickListener clickListeners;
 
-    public HabitLogAdapter(Context context, ArrayList<HabitLogModel> habitList, ClickListener listener) {
+    public HabitLogAdapter(Context context, List<Habit> habits, ClickListener listener) {
         this.context = context;
-        this.habitList = habitList;
+        this.habits = habits;
         this.clickListeners = listener;
     }
 
@@ -35,13 +37,13 @@ public class HabitLogAdapter extends RecyclerView.Adapter <HabitLogAdapter.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull HabitLogAdapter.ViewHolder holder, int position) {
-        HabitLogModel habit = habitList.get(position);
-        holder.activityName.setText(habit.getTitle());
+        Habit habit = habits.get(position);
+        holder.activityName.setText(habit.getName());
     }
 
     @Override
     public int getItemCount() {
-        return habitList.size();
+        return habits.size();
     }
 
 

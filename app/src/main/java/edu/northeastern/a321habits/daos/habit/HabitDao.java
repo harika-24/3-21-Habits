@@ -50,7 +50,7 @@ public class HabitDao implements HabitDaoI {
     }
 
     @Override
-    public void addProgressToHabit(HabitProgress progress, FirestoreAddCallback callback) {
+    public void addProgressToHabit(HabitProgress progress, String currentUser, FirestoreAddCallback callback) {
         db.collection(HABIT_PROGRESS_COLLECTION).add(progress)
                 .addOnSuccessListener(callback::onSuccessfullyAdded)
                 .addOnFailureListener(callback::onFailure);
@@ -62,6 +62,12 @@ public class HabitDao implements HabitDaoI {
                 .delete()
                 .addOnSuccessListener(unused -> callback.onSuccessfullyDeleted())
                 .addOnFailureListener(callback::onFailure);
+    }
+
+    @Override
+    public void findHabitProgressOfOthers(String currentUser, FirestoreQueryCallback callback) {
+        Query query = db.collection(HABIT_PROGRESS_COLLECTION).whereNotEqualTo("handle", currentUser);
+        callOnComplete(query, callback);
     }
 
 

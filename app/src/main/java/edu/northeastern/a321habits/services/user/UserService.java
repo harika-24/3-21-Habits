@@ -15,7 +15,7 @@ public class UserService implements UserServiceI{
         userDao.getUserById(id, new FirestoreGetCallback() {
             @Override
             public void onDocumentExists(Map<String, Object> value) {
-                User user = new User(value.getOrDefault("handle", "").toString());
+                User user = new User(value.getOrDefault("handle", "").toString(), id);
                 callback.onGetExists(user);
             }
 

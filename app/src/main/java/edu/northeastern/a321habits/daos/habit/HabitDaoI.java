@@ -11,6 +11,7 @@ public interface HabitDaoI {
     void getProgressOfHabit(String habitId, FirestoreQueryCallback callback);
     void createHabit(Habit habit, FirestoreAddCallback callback);
     void deleteHabit(String habitId, FirestoreDeleteCallback callback);
-    void addProgressToHabit(HabitProgress progress, FirestoreAddCallback callback);
+    void addProgressToHabit(HabitProgress progress, String currentUser, FirestoreAddCallback callback);
     void deleteProgressFromHabit(String habitProgressId, FirestoreDeleteCallback callback);
+    void findHabitProgressOfOthers(String currentUser, FirestoreQueryCallback callback);
 }

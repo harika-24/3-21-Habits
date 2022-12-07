@@ -1,10 +1,13 @@
 package edu.northeastern.a321habits.ui.main;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.widget.NestedScrollView;
@@ -13,12 +16,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.northeastern.a321habits.R;
+import edu.northeastern.a321habits.daos.habit.HabitDao;
 import edu.northeastern.a321habits.databinding.FragmentFeedBinding;
 import edu.northeastern.a321habits.model.FeedAdapter;
 import edu.northeastern.a321habits.model.HabitLogModel;
 import edu.northeastern.a321habits.model.UserModel;
+import edu.northeastern.a321habits.models.habit.HabitProgress;
+import edu.northeastern.a321habits.models.user.User;
+import edu.northeastern.a321habits.services.ServiceGetCallback;
+import edu.northeastern.a321habits.services.ServiceQueryCallback;
+import edu.northeastern.a321habits.services.habit.HabitService;
+import edu.northeastern.a321habits.services.habit.HabitServiceI;
+import edu.northeastern.a321habits.services.user.UserService;
+import edu.northeastern.a321habits.services.user.UserServiceI;
 
 /**
  * Fragment for showing habit logs of other users. Loads on scrolling.
@@ -98,20 +111,56 @@ public class FeedFragment extends Fragment {
         feedRV.setVisibility(View.VISIBLE);
         String imageUrl = "https://i.imgur.com/tGbaZCY.jpg";
         UserModel user = new UserModel("SWATI", "AGARWAL", imageUrl);
-        habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
-        habitLogArrayList.add(new HabitLogModel("Read 10 pages", imageUrl, "12/2 7:00PM", 7, user));
-        habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
-        habitLogArrayList.add(new HabitLogModel("Read 10 pages", imageUrl, "12/2 7:00PM", 7, user));
-        habitLogArrayList.add(new HabitLogModel("Read 10 pages", "", "12/2 7:00PM", 7, user));
 
-        // on below line we are adding our array list to our adapter class.
-        feedRVAdapter = new FeedAdapter(root.getContext(), habitLogArrayList);
+        HabitServiceI habitService = new HabitService(new HabitDao());
+        habitService.findHabitProgressOfOthers(getLoggedInUser(), new ServiceQueryCallback<HabitProgress>() {
+            @Override
+            public void onObjectsExist(List<HabitProgress> objects) {
+                UserServiceI userService = new UserService();
+                for (HabitProgress habitProgress: objects) {
+                    userService.getUserById(habitProgress.getUserId(), new ServiceGetCallback<User>() {
+                        @Override
+                        public void onGetExists(User object) {
+                            habitLogArrayList.add(new HabitLogModel(habitProgress.getName(), habitProgress.getPhotoUrl(), habitProgress.getDateLogged().toString(), 7, user));
 
-        // on below line we are setting
-        // adapter to our recycler view.
-        feedRV.setAdapter(feedRVAdapter);
+                            // on below line we are adding our array list to our adapter class.
+                            feedRVAdapter = new FeedAdapter(root.getContext(), habitLogArrayList);
+
+                            // on below line we are setting
+                            // adapter to our recycler view.
+                            feedRV.setAdapter(feedRVAdapter);
+                        }
+
+                        @Override
+                        public void onGetDoesNotExist() {
+
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure() {
+                Toast.makeText(getContext(), "Could not load the feed. Try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
+
+    }
+
+    private String getLoggedInUser() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String defaultUserHandleString = getString(R.string.saved_default_handle);
+        return sharedPref
+                .getString(getString(R.string.saved_logged_in_handle_key),
+                        defaultUserHandleString);
     }
 
     @Override

@@ -202,10 +202,18 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
 
             notesIcon.setOnClickListener(view -> clickListeners.onNoteIconClicked(getAdapterPosition()));
 
-            checkIcon.setOnClickListener(view -> {
-                clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon, resetIcon);
-                updateProgressPills(habits.get(getAdapterPosition()), pills ,checkIcon);
-            });
+            checkIcon.setOnClickListener(view ->
+                    clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon,
+                            resetIcon, new UpdatePillCallback() {
+                @Override
+                public void updatePills() {
+                    updateProgressPills(habits.get(getAdapterPosition()), pills ,checkIcon);
+                }
+            }));
         }
+    }
+
+    public interface UpdatePillCallback {
+        void updatePills();
     }
 }

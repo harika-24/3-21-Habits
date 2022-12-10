@@ -273,7 +273,7 @@ public class HabitLogFragment extends Fragment {
             }
 
             @Override
-            public void onCheckIconClicked(int adapterPosition, ImageView checkIcon) {
+            public void onCheckIconClicked(int adapterPosition, ImageView checkIcon, ImageView resetIcon) {
                 Habit habit = habits.get(adapterPosition);
                 HabitServiceI habitService = new HabitService(new HabitDao());
                 String currentUserHandle = SharedPrefUtil.getHandleOfLoggedInUser(getContext());
@@ -286,6 +286,7 @@ public class HabitLogFragment extends Fragment {
                         Toast.makeText(getContext(), "Added today's log to habit.",
                                 Toast.LENGTH_SHORT).show();
                         checkIcon.setVisibility(View.INVISIBLE);
+                        resetIcon.setVisibility(View.VISIBLE);
 
                     }
 

@@ -1,6 +1,7 @@
 package edu.northeastern.a321habits.model;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
         private final ImageView cameraIcon;
         private final ImageView notesIcon;
         private final ImageView checkIcon;
+        private final ImageView resetIcon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +92,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
             cameraIcon = itemView.findViewById(R.id.camera);
             notesIcon = itemView.findViewById(R.id.notes);
             checkIcon = itemView.findViewById(R.id.check);
+            resetIcon = itemView.findViewById(R.id.reset);
 
             cameraIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,7 +112,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
             checkIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon);
+                    clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon, resetIcon);
                 }
             });
         }

@@ -349,7 +349,9 @@ public class HabitLogFragment extends Fragment {
             }
 
             @Override
-            public void onCheckIconClicked(int adapterPosition, ImageView checkIcon, ImageView resetIcon) {
+            public void onCheckIconClicked(int adapterPosition, ImageView checkIcon,
+                                           ImageView resetIcon,
+                                           HabitLogAdapter.UpdatePillCallback callback) {
                 Habit habit = habits.get(adapterPosition);
                 String currentUserHandle = SharedPrefUtil.getHandleOfLoggedInUser(getContext());
                 HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
@@ -362,6 +364,7 @@ public class HabitLogFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                         checkIcon.setVisibility(View.INVISIBLE);
                         resetIcon.setVisibility(View.VISIBLE);
+                        callback.updatePills();
                     }
 
                     @Override

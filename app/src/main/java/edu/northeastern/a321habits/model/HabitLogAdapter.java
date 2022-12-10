@@ -1,6 +1,7 @@
 package edu.northeastern.a321habits.model;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,15 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
     public void onBindViewHolder(@NonNull HabitLogAdapter.ViewHolder holder, int position) {
         Habit habit = habits.get(position);
         holder.activityName.setText(habit.getName());
+        updateProgressPills(habit, holder.pills, holder.checkIcon);
+    }
+
+    private void updateProgressPills(Habit habit, List<View> pills, ImageView checkIcon) {
+        Drawable emptyPill = ResourcesCompat
+                .getDrawable(context.getResources(),R.drawable.vertical_pill,null);
+        for (View pill: pills) {
+            pill.setBackground(emptyPill);
+        }
 
         SessionServiceI sessionService = new SessionService(new SessionDao());
         sessionService.getSessionById(habit.getSessionId(), new ServiceGetCallback<Session>() {
@@ -66,26 +76,26 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
                 HabitServiceI habitService = new HabitService(new HabitDao());
                 habitService.getProgressOfHabit(habit.getId(), new ServiceQueryCallback<HabitProgress>() {
                     @Override
-                    public void onObjectsExist(List<HabitProgress> objects) {
-                        if (objects.size() == 0) {
+                    public void onObjectsExist(List<HabitProgress> progressObjects) {
+                        if (progressObjects.size() == 0) {
                             return;
                         }
 
                         Date today = new Date();
-                        LocalDate sessionStart = DateUtil.convertToLocalDate(
-                                session.getStartDate().toDate());
+                        LocalDate sessionStart = DateUtil.convertToLocalDate(session.getStartDate().toDate());
                         LocalDate habitLogged;
-                        for (HabitProgress habitProgress : objects) {
+                        for (HabitProgress habitProgress : progressObjects) {
+                            habitLogged = DateUtil.convertToLocalDate(
+                                    habitProgress.getDateLogged().toDate());
+                            int daysDifference = Period.between(sessionStart, habitLogged).getDays();
                             if (habitProgress.isCompleted()) {
-                                habitLogged = DateUtil.convertToLocalDate(
-                                        habitProgress.getDateLogged().toDate());
-                                int daysDifference = Period.between(sessionStart, habitLogged).getDays();
-                                holder.pills.get(daysDifference).setBackground(ResourcesCompat.getDrawable(context.getResources(),R.drawable.vertical_pill_filled,null));
+                                pills.get(daysDifference).setBackground(ResourcesCompat.getDrawable(context.getResources(),R.drawable.vertical_pill_filled,null));
+                            } else {
+                                pills.get(daysDifference).setBackground(ResourcesCompat.getDrawable(context.getResources(),R.drawable.vertical_pill,null));
                             }
                             if (DateUtils.isSameDay(habitProgress.getDateLogged().toDate(), today)) {
-                                holder.checkIcon.setVisibility(View.INVISIBLE);
+                                checkIcon.setVisibility(View.INVISIBLE);
                             }
-
                         }
                     }
 
@@ -106,8 +116,6 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
                 Log.d(TAG, String.format("Failed fetching session for session by id %s", habit.getSessionId()));
             }
         });
-
-
     }
 
     @Override
@@ -194,12 +202,18 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
 
             notesIcon.setOnClickListener(view -> clickListeners.onNoteIconClicked(getAdapterPosition()));
 
-            checkIcon.setOnClickListener(new View.OnClickListener() {
+            checkIcon.setOnClickListener(view ->
+                    clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon,
+                            resetIcon, new UpdatePillCallback() {
                 @Override
-                public void onClick(View view) {
-                    clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon, resetIcon);
+                public void updatePills() {
+                    updateProgressPills(habits.get(getAdapterPosition()), pills ,checkIcon);
                 }
-            });
+            }));
         }
+    }
+
+    public interface UpdatePillCallback {
+        void updatePills();
     }
 }

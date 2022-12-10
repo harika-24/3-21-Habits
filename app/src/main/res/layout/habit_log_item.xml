@@ -21,28 +21,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/check"
-                    android:visibility="visible"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="20dp"
-                    android:clickable="true"
-                    android:src="@drawable/ic_check" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <ImageView
+                    <ImageView
+                        android:id="@+id/check"
+                        android:visibility="visible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="20dp"
+                        android:clickable="true"
+                        android:src="@drawable/ic_check" />
+
+                    <ImageView
                     android:id="@+id/reset"
                     android:visibility="invisible"
                     android:layout_width="wrap_content"
@@ -55,42 +62,42 @@
                     android:src="@drawable/ic_refresh" />
 
                 <ImageView
-                    android:id="@+id/camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="21dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="21dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toStartOf="@id/check"
-                    android:layout_toEndOf="@+id/notes"
-                    android:clickable="true"
-                    android:src="@drawable/ic_camera" />
+                        android:id="@+id/camera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="21dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="21dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toStartOf="@id/check"
+                        android:layout_toEndOf="@+id/notes"
+                        android:clickable="true"
+                        android:src="@drawable/ic_camera" />
 
-                <ImageView
-                    android:id="@+id/notes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="39dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="19dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toEndOf="@+id/textView"
-                    android:clickable="true"
-                    android:src="@drawable/ic_chat_unread" />
+                    <ImageView
+                        android:id="@+id/notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="19dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toEndOf="@+id/textView"
+                        android:clickable="true"
+                        android:src="@drawable/ic_chat_unread" />
 
-                <!--                <ImageView-->
-                <!--                    android:id="@+id/delete"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_below="@id/check"-->
-                <!--                    android:clickable="true"-->
-                <!--                    android:layout_alignParentEnd="true"-->
-                <!--                    android:layout_marginStart="10dp"-->
-                <!--                    android:layout_marginTop="26dp"-->
-                <!--                    android:layout_marginEnd="20dp"-->
-                <!--                    android:layout_marginBottom="10dp"-->
-                <!--                    android:src="@drawable/ic_delete" />-->
+                    <!--                <ImageView-->
+                    <!--                    android:id="@+id/delete"-->
+                    <!--                    android:layout_width="wrap_content"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:layout_below="@id/check"-->
+                    <!--                    android:clickable="true"-->
+                    <!--                    android:layout_alignParentEnd="true"-->
+                    <!--                    android:layout_marginStart="10dp"-->
+                    <!--                    android:layout_marginTop="26dp"-->
+                    <!--                    android:layout_marginEnd="20dp"-->
+                    <!--                    android:layout_marginBottom="10dp"-->
+                    <!--                    android:src="@drawable/ic_delete" />-->
 
                 <TextView
                     android:id="@+id/textView"
@@ -103,9 +110,216 @@
                     android:textColor="@color/text"
                     android:textSize="20sp" />
 
-            </RelativeLayout>
-        </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                <View
+                    android:id="@+id/pill_1"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_2"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_3"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_4"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_5"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+
+                <View
+                    android:id="@+id/pill_6"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_7"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_8"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_9"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_10"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_11"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_12"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+
+                <View
+                    android:id="@+id/pill_13"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_14"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_15"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_16"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_17"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_18"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_19"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+
+                <View
+                    android:id="@+id/pill_20"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+                <View
+                    android:id="@+id/pill_21"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="0.04761904762"
+                    android:layout_width="12dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/vertical_pill"/>
+
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

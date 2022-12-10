@@ -298,6 +298,8 @@ public class HabitLogFragment extends Fragment {
                 });
             }
         });
+
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

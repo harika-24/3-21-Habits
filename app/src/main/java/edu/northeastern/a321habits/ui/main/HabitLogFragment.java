@@ -67,6 +67,7 @@ public class HabitLogFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Habit> habits = new ArrayList<>();
     private String notes;
+    private HabitServiceI habitService;
 
     public static HabitLogFragment newInstance(int index) {
         HabitLogFragment fragment = new HabitLogFragment();
@@ -85,6 +86,7 @@ public class HabitLogFragment extends Fragment {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
+        habitService = new HabitService(new HabitDao());
     }
 
     @Override
@@ -99,7 +101,6 @@ public class HabitLogFragment extends Fragment {
 
         newActivityBtn = root.findViewById(R.id.floatingActionButton2);
 
-        HabitServiceI habitServiceI = new HabitService(new HabitDao());
         SessionServiceI sessionService = new SessionService(new SessionDao());
         sessionService.getCurrentSession(SharedPrefUtil.getHandleOfLoggedInUser(getContext()),
                 new ServiceQueryCallback<Session>() {
@@ -108,7 +109,7 @@ public class HabitLogFragment extends Fragment {
                         if (objects.size() > 0) {
                             Session session = objects.get(0);
                             SharedPrefUtil.addCurrentSession(session.getSessionId(), getContext());
-                            habitServiceI.findHabitsOfSession(SharedPrefUtil.getCurrentSession(getContext()), new ServiceQueryCallback<Habit>() {
+                            habitService.findHabitsOfSession(SharedPrefUtil.getCurrentSession(getContext()), new ServiceQueryCallback<Habit>() {
                                 @Override
                                 public void onObjectsExist(List<Habit> objects) {
                                     for (Habit habit: objects) {
@@ -160,7 +161,6 @@ public class HabitLogFragment extends Fragment {
                         snackMessage.show();
                         int pos = viewHolder.getLayoutPosition();
                         Habit habit = habits.get(pos);
-                        HabitServiceI habitService = new HabitService(new HabitDao());
                         habitService.deleteHabit(habit.getId(), new ServiceDeleteCallback() {
                             @Override
                             public void onDeleted() {
@@ -249,7 +249,6 @@ public class HabitLogFragment extends Fragment {
                         return;
                     }
                     notes = text;
-                    HabitServiceI habitService = new HabitService(new HabitDao());
                     Habit habit = habits.get(position);
                     Map<String, Object> updateObject = new HashMap<>();
                     updateObject.put("note", notes);
@@ -275,7 +274,6 @@ public class HabitLogFragment extends Fragment {
             @Override
             public void onCheckIconClicked(int adapterPosition, ImageView checkIcon) {
                 Habit habit = habits.get(adapterPosition);
-                HabitServiceI habitService = new HabitService(new HabitDao());
                 String currentUserHandle = SharedPrefUtil.getHandleOfLoggedInUser(getContext());
                 HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
                         null, new Timestamp(new Date()),
@@ -332,7 +330,6 @@ public class HabitLogFragment extends Fragment {
                     habits.clear();
                     createNewSessionAndAdd(activityName);
                 } else {
-                    HabitServiceI habitService = new HabitService(new HabitDao());
                     habitService.createHabit(new Habit("", activityName, currentSession), new ServiceAddCallback() {
                         @Override
                         public void onCreated(String uniqueId) {
@@ -362,7 +359,6 @@ public class HabitLogFragment extends Fragment {
 
     private void createNewSessionAndAdd(String activityName) {
         SessionServiceI sessionService = new SessionService(new SessionDao());
-        HabitServiceI habitService = new HabitService(new HabitDao());
         LocalDate localDate = LocalDate.now();
         sessionService.createSession(new Session(null,
                         SharedPrefUtil.getHandleOfLoggedInUser(getContext()),

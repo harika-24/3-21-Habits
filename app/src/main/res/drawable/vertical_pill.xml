@@ -6,10 +6,9 @@
 <!--        android:width="1.5dp"-->
 <!--        android:color="#52B1E5" />-->
     <gradient
-        android:startColor="#CCE7FF"
-        android:endColor="#BCE0FF"
+        android:startColor="#E0F1FF"
+        android:endColor="#D2EAFF"
         android:angle="-90">
-
     </gradient>
 
     // The corner radius, reduce it to make it more square

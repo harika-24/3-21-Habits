@@ -3,10 +3,10 @@ package edu.northeastern.a321habits.ui.main;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +21,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -30,7 +31,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -73,6 +80,12 @@ public class HabitLogFragment extends Fragment {
     private List<Habit> habits = new ArrayList<>();
     private String notes;
     private HabitServiceI habitService;
+    private ActivityResultLauncher<Uri> mCaptureImage;
+    private Uri localUri;
+    private Uri remoteUri;
+    private StorageReference storageReference;
+    private int positionSelected;
+    private Date photoUploadDate;
 
     public static HabitLogFragment newInstance(int index) {
         HabitLogFragment fragment = new HabitLogFragment();
@@ -85,6 +98,7 @@ public class HabitLogFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        storageReference = FirebaseStorage.getInstance().getReference();
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
@@ -92,6 +106,49 @@ public class HabitLogFragment extends Fragment {
         }
         pageViewModel.setIndex(index);
         habitService = new HabitService(new HabitDao());
+        mCaptureImage = registerForActivityResult(new ActivityResultContracts.TakePicture(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if (result) {
+                    Log.d("IMAGE CAPTURED", "image was taken");
+                    StorageReference imgRef = storageReference.child("/images/" + localUri.getLastPathSegment());
+                    UploadTask uploadTask = imgRef.putFile(localUri);
+                    uploadTask.addOnSuccessListener(res -> {
+                        imgRef.getMetadata().addOnSuccessListener(storageMetadata -> {
+                            photoUploadDate = new Date(storageMetadata.getCreationTimeMillis());
+                            imgRef.getDownloadUrl().addOnSuccessListener(resUri -> {
+                                remoteUri = resUri;
+                                Log.d("REMOTE URI", remoteUri.toString());
+                                updatePhotoMetaDataInDb();
+                            });
+                        });
+                    });
+                } else {
+                    Log.e("IMAGE FAILED/CANCELLED", "capture image failed/cancelled");
+                }
+            }
+        });
+    }
+
+    /**
+     * This method is used to update the photo metadata in the DB
+     */
+    public void updatePhotoMetaDataInDb() {
+        Habit habit = habits.get(positionSelected);
+        Map<String, Object> updateObject = new HashMap<>();
+        updateObject.put("photoUrl", remoteUri);
+        updateObject.put("photoUploadDate", photoUploadDate);
+        habitService.updateHabitProgress(habit.getId(), updateObject, new ServiceUpdateCallback() {
+            @Override
+            public void onUpdated() {
+                Toast.makeText(getActivity(), "Photo Added", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure() {
+                Toast.makeText(getActivity(), "Could not add photo. Try again", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -117,7 +174,7 @@ public class HabitLogFragment extends Fragment {
                             habitService.findHabitsOfSession(SharedPrefUtil.getCurrentSession(getContext()), new ServiceQueryCallback<Habit>() {
                                 @Override
                                 public void onObjectsExist(List<Habit> objects) {
-                                    for (Habit habit: objects) {
+                                    for (Habit habit : objects) {
                                         habits.add(habit);
                                         adapter.notifyItemInserted(habits.size() - 1);
                                     }
@@ -129,7 +186,7 @@ public class HabitLogFragment extends Fragment {
                                 @Override
                                 public void onFailure() {
                                     Toast.makeText(getContext(), "Could not find any " +
-                                            "habits for this session. Try again",
+                                                    "habits for this session. Try again",
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -194,6 +251,7 @@ public class HabitLogFragment extends Fragment {
                                     });
                                 }
                             }
+
                             @Override
                             public void onFailure(Exception e) {
                                 Toast.makeText(getContext(), "Could not delete habit. Please try again.", Toast.LENGTH_LONG).show();
@@ -226,46 +284,34 @@ public class HabitLogFragment extends Fragment {
         setAdapter();
         return root;
     }
-//
-//    private Uri generateUri(){
-//
-//    }
+
+    private Uri createTmpAndGetUri() throws IOException {
+        String s = Environment.DIRECTORY_PICTURES;
+        File imageDirectory = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File tmpFile = File.createTempFile("Habit_" + timestamp, ".jpg", imageDirectory);
+        localUri = FileProvider.getUriForFile(getContext(), "edu.northeastern.a321habits.fileprovider", tmpFile);
+        return localUri;
+    }
 
     private void setAdapter() {
         adapter = new HabitLogAdapter(binding.getRoot().getContext(), habits, new ClickListener() {
             @Override
             public void onCameraIconClicked(int position) {
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                startActivity(intent);
+                positionSelected = position;
+                try {
+                    mCaptureImage.launch(createTmpAndGetUri());
 
-                //STEP 1 - Capture Image
-                //STEP 2 - Store image in Storage
-                //STEP 3 - Get the url of the stores image
-                //STEP 4 - Update the firebase database
-
-
-                /**
-                 * Step 1 - TakePicture requires a URI
-                 * Step 2 - TakePicture is launched when we call mCaptureImage.launch(uri)
-                 * Step 3 - uri needs to be a unique one
-                 * Step 4 - onActivityResult is called after image has been taken and saved at the uri
-                 * Step 5 - IN onActivityResult WE UPLOAD TO FIREBASE STORAGE
-                 */
-//                ActivityResultLauncher<Uri> mCaptureImage = registerForActivityResult(new ActivityResultContracts.TakePicture(), new ActivityResultCallback<Boolean>() {
-//                    @Override
-//                    public void onActivityResult(Boolean result) {
-//
-//                    }
-//                });
-//
-//                mCaptureImage.launch(URI);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onNoteIconClicked(int position) {
                 final Dialog noteDialog = new Dialog(getActivity());
                 noteDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
+                //The user will be able to cancel the dialog by clicking anywhere outside the dialog.
                 noteDialog.setCancelable(true);
                 //Mention the name of the layout of your custom dialog.
                 noteDialog.setContentView(R.layout.custom_note);
@@ -308,7 +354,7 @@ public class HabitLogFragment extends Fragment {
                 String currentUserHandle = SharedPrefUtil.getHandleOfLoggedInUser(getContext());
                 HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
                         null, new Timestamp(new Date()),
-                        true, null, currentUserHandle,habit.getName());
+                        true, null, currentUserHandle, habit.getName());
                 habitService.addProgressToHabit(habitProgress, currentUserHandle, new ServiceAddCallback() {
                     @Override
                     public void onCreated(String uniqueId) {
@@ -316,7 +362,6 @@ public class HabitLogFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                         checkIcon.setVisibility(View.INVISIBLE);
                         resetIcon.setVisibility(View.VISIBLE);
-
                     }
 
                     @Override
@@ -337,7 +382,7 @@ public class HabitLogFragment extends Fragment {
     void showActivityBox() {
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
+        //The user will be able to cancel the dialog by clicking anywhere outside the dialog.
         dialog.setCancelable(true);
         //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.custom_new_activity);
@@ -353,7 +398,6 @@ public class HabitLogFragment extends Fragment {
                 Toast.makeText(getActivity(), "Habit can't be empty", Toast.LENGTH_LONG).show();
                 return;
             }
-
 
             if (habits.size() == 0) {
                 // Start a new Session

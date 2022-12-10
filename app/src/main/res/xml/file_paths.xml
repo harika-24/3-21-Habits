@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path
+        name="images"
+        path="Android/data/edu.northeastern.a321habits/files/Pictures" />
+    <external-files-path
+        name="debug_images"
+        path="/storage/emulated/0/Android/data/edu.northeastern.a321habits/files/Pictures/"/>
+
+    <external-files-path
+        name="my_root_images"
+        path="/"/>
+
+</paths>

@@ -39,6 +39,7 @@
 
                     <ImageView
                         android:id="@+id/check"
+                        android:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -106,7 +107,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="21dp"
                     android:layout_marginTop="12dp"
-                    android:textColor="#D53B6F"
+                    android:textColor="@color/text"
                     android:textSize="20sp" />
 
                 </RelativeLayout>

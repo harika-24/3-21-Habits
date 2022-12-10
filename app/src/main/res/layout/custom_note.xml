@@ -17,7 +17,8 @@
         android:id="@+id/editTextTextMultiLine"
         android:layout_width="match_parent"
         android:layout_height="87dp"
-        android:ems="10"
+        android:ems="20"
+        android:background="@drawable/border"
         android:gravity="start|top"
         android:inputType="textMultiLine" />
 
@@ -25,6 +26,7 @@
         android:id="@+id/note_submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:layout_gravity="end"
         android:backgroundTint="@color/button"
         android:text="Add Note" />

@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -221,6 +226,10 @@ public class HabitLogFragment extends Fragment {
         setAdapter();
         return root;
     }
+//
+//    private Uri generateUri(){
+//
+//    }
 
     private void setAdapter() {
         adapter = new HabitLogAdapter(binding.getRoot().getContext(), habits, new ClickListener() {
@@ -228,6 +237,28 @@ public class HabitLogFragment extends Fragment {
             public void onCameraIconClicked(int position) {
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                 startActivity(intent);
+
+                //STEP 1 - Capture Image
+                //STEP 2 - Store image in Storage
+                //STEP 3 - Get the url of the stores image
+                //STEP 4 - Update the firebase database
+
+
+                /**
+                 * Step 1 - TakePicture requires a URI
+                 * Step 2 - TakePicture is launched when we call mCaptureImage.launch(uri)
+                 * Step 3 - uri needs to be a unique one
+                 * Step 4 - onActivityResult is called after image has been taken and saved at the uri
+                 * Step 5 - IN onActivityResult WE UPLOAD TO FIREBASE STORAGE
+                 */
+//                ActivityResultLauncher<Uri> mCaptureImage = registerForActivityResult(new ActivityResultContracts.TakePicture(), new ActivityResultCallback<Boolean>() {
+//                    @Override
+//                    public void onActivityResult(Boolean result) {
+//
+//                    }
+//                });
+//
+//                mCaptureImage.launch(URI);
             }
 
             @Override

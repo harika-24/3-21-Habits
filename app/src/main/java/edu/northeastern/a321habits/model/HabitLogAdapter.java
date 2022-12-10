@@ -122,6 +122,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
         private final ImageView cameraIcon;
         private final ImageView notesIcon;
         private final ImageView checkIcon;
+        private final ImageView resetIcon;
 
         private final View pill1;
         private final View pill2;
@@ -156,6 +157,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
             cameraIcon = itemView.findViewById(R.id.camera);
             notesIcon = itemView.findViewById(R.id.notes);
             checkIcon = itemView.findViewById(R.id.check);
+            resetIcon = itemView.findViewById(R.id.reset);
 
             pill1 = itemView.findViewById(R.id.pill_1);
             pill2 = itemView.findViewById(R.id.pill_2);
@@ -192,7 +194,12 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
 
             notesIcon.setOnClickListener(view -> clickListeners.onNoteIconClicked(getAdapterPosition()));
 
-            checkIcon.setOnClickListener(view -> clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon));
+            checkIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListeners.onCheckIconClicked(getAdapterPosition(), checkIcon, resetIcon);
+                }
+            });
         }
     }
 }

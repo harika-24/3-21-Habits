@@ -84,13 +84,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "progress", Toast.LENGTH_SHORT).show();
             return true;
         }
-        if (id == R.id.action_item_settings) {
-
-            // Do something
-            Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
         if (id == R.id.action_item_logout) {
             SharedPrefUtil.clearAll(getApplicationContext());
             startActivity(new Intent(this, LoginActivity.class));

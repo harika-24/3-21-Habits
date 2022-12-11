@@ -8,6 +8,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ import edu.northeastern.a321habits.services.ServiceAddCallback;
 import edu.northeastern.a321habits.services.ServiceDeleteCallback;
 import edu.northeastern.a321habits.services.ServiceQueryCallback;
 import edu.northeastern.a321habits.services.ServiceQueryPaginatedCallback;
+import edu.northeastern.a321habits.services.ServiceQuerySummaryCallback;
 import edu.northeastern.a321habits.services.ServiceUpdateCallback;
 
 public class HabitService implements HabitServiceI {
@@ -61,8 +64,8 @@ public class HabitService implements HabitServiceI {
                 for (QueryDocumentSnapshot document: snapshot) {
 
                     int progressDay = 1;
-                    if (document.getString("progressDay") != null) {
-                        progressDay = (int) document.get("progressDay");
+                    if (document.get("progressDay") != null) {
+                        progressDay = ((Long)document.get("logDay")).intValue();
                     }
 
                     HabitProgress habitProgress =
@@ -162,8 +165,8 @@ public class HabitService implements HabitServiceI {
                     // todo: remove this condition when database becomes backward compatible and
                     //  all records have a progressDay field
                     int progressDay = 1;
-                    if (document.getString("progressDay") != null) {
-                        progressDay = (int) document.get("progressDay");
+                    if (document.get("logDay") != null) {
+                        progressDay = ((Long)document.get("logDay")).intValue();
                     }
                     habitProgresses.add(new HabitProgress(document.getString("habitId"),
                             document.getString("photoUrl"),
@@ -197,6 +200,65 @@ public class HabitService implements HabitServiceI {
 
             @Override
             public void onFailure() {
+                callback.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void getAllHabitProgressOfUser(String userId, ServiceQuerySummaryCallback callback) {
+        habitDao.getAllHabitProgressOfUser(userId, new FirestoreQueryCallback() {
+            @Override
+            public void onQuerySucceeds(QuerySnapshot snapshot) {
+
+                Map<String, ArrayList<Integer>> habitIDtoLoggedDays = new HashMap<>();
+                Map<String, String> habitIDtoName = new HashMap<>();
+                int streakCount = 0;
+                String perfectedHabit = null;
+
+                for (QueryDocumentSnapshot document : snapshot) {
+                    String habitId = document.getString("habitId");
+                    String habitName = document.getString("name");
+                    Integer progressDay = ((Long)document.get("logDay")).intValue();
+
+                    habitIDtoName.put(habitId, habitName);
+                    if (habitIDtoLoggedDays.get(habitId) != null) {
+                        habitIDtoLoggedDays.get(habitId).add(progressDay);
+                    }
+                    else {
+                        habitIDtoLoggedDays.put(habitId, new ArrayList<>(progressDay));
+                    }
+                }
+
+
+                for (Map.Entry<String, ArrayList<Integer>> habit :
+                        habitIDtoLoggedDays.entrySet()) {
+
+                    ArrayList<Integer> days = habit.getValue();
+                    Collections.sort(days);
+
+                    int consecutiveDays = 1;
+                    for (int i = 1; i< days.size(); i++) {
+                        if (days.get(i) - days.get(i-1) == 1) {
+                            consecutiveDays++;
+                        }
+                        if(consecutiveDays == 7) {
+                            Log.d("HABIT SUMMARY", "streak found!!!!");
+                            streakCount++;
+                            consecutiveDays = 1;
+                        }
+                    }
+                    if (days.size() == 21) {
+                        perfectedHabit = habitIDtoName.get(habit.getKey());
+                    }
+                }
+                Log.d("HABIT SUMMARY", String.valueOf(streakCount));
+
+                callback.onSummarySuccessful(streakCount, perfectedHabit);
+            }
+
+            @Override
+            public void failure() {
                 callback.onFailure();
             }
         });

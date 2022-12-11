@@ -36,6 +36,8 @@ public class SessionDao implements SessionDaoI {
         callOnComplete(query, callback);
     }
 
+
+
     @Override
     public void getSessionById(String sessionId, FirestoreGetCallback callback) {
         db.collection(COLLECTION).document(sessionId).get()
@@ -92,5 +94,13 @@ public class SessionDao implements SessionDaoI {
                     callback.onFailure();
                 });
 
+    }
+
+    @Override
+    public void getCompletedSessions(String userId, FirestoreQueryCallback callback) {
+        Query query = db.collection(COLLECTION)
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("hasEnded", true);
+        callOnComplete(query, callback);
     }
 }

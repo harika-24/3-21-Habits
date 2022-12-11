@@ -16,4 +16,5 @@ public interface SessionServiceI {
     void deleteSession(String sessionId, ServiceDeleteCallback callback);
     void updateSession(Map<String, Object> updateObject, ServiceUpdateCallback callback);
     void getCurrentSession(String currentUser, ServiceQueryCallback<Session> callback);
+    void getCompletedSessions(String userId, ServiceQueryCallback<Session> callback);
 }

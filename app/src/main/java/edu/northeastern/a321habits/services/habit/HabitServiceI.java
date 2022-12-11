@@ -10,6 +10,7 @@ import edu.northeastern.a321habits.services.ServiceAddCallback;
 import edu.northeastern.a321habits.services.ServiceDeleteCallback;
 import edu.northeastern.a321habits.services.ServiceQueryCallback;
 import edu.northeastern.a321habits.services.ServiceQueryPaginatedCallback;
+import edu.northeastern.a321habits.services.ServiceQuerySummaryCallback;
 import edu.northeastern.a321habits.services.ServiceUpdateCallback;
 
 public interface HabitServiceI {
@@ -22,4 +23,5 @@ public interface HabitServiceI {
     void findHabitProgressOfOthers(String currentUser, DocumentSnapshot lastVisible, ServiceQueryPaginatedCallback<HabitProgress> callback);
     void updateHabitProgress(String id, Map<String, Object> updateObject,
                              ServiceUpdateCallback callback);
+    void getAllHabitProgressOfUser(String userId, ServiceQuerySummaryCallback callback);
 }

@@ -72,9 +72,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item_progress) {
 
-            // Do something
-
-            Toast.makeText(this, "progress", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, InsightsActivity.class));
             return true;
         }
         if (id == R.id.action_item_logout) {

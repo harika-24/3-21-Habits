@@ -74,7 +74,8 @@ public class HabitService implements HabitServiceI {
                                     document.getString("note"),
                                     document.getString("userId"),
                                     document.getString("name"),
-                                    progressDay);
+                                    progressDay,
+                                    document.getId());
                     habitList.add(habitProgress);
                 }
                 callback.onObjectsExist(habitList);
@@ -172,7 +173,8 @@ public class HabitService implements HabitServiceI {
                             document.getString("note"),
                             document.getString("userId"),
                             document.getString("name"),
-                            progressDay));
+                            progressDay,
+                            document.getId()));
                 }
                 Log.d("HABIT SCROLL","VALUE OF LASTvISIBLE" +lastVisible.toString());
                 callback.onObjectsExistPaginate(habitProgresses, lastVisible);

@@ -10,4 +10,6 @@ public interface ClickListener {
 
     void onCheckIconClicked(int adapterPosition, ImageView checkIcon, ImageView resetIcon,
                             HabitLogAdapter.UpdatePillCallback callback);
+
+    void onResetIconClicked(int position, ImageView checkIcon, ImageView resetIcon, HabitLogAdapter.UpdatePillCallback callback );
 }

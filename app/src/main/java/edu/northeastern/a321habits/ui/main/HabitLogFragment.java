@@ -72,6 +72,7 @@ import edu.northeastern.a321habits.services.session.SessionServiceI;
 public class HabitLogFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String TAG = "HabitLogFragment";
 
     private PageViewModel pageViewModel;
     private FragmentHabitLogBinding binding;
@@ -374,7 +375,7 @@ public class HabitLogFragment extends Fragment {
                 Log.d("HABIT LOG", "days between calculated as = "+progressDay);
                 HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
                         null, logTimestamp,
-                        true, null, currentUserHandle,habit.getName(), progressDay);
+                        true, null, currentUserHandle,habit.getName(), progressDay,"");
                 habitService.addProgressToHabit(habitProgress, currentUserHandle, new ServiceAddCallback() {
                     @Override
                     public void onCreated(String uniqueId) {
@@ -389,6 +390,37 @@ public class HabitLogFragment extends Fragment {
                     public void onFailure(Exception e) {
                         Toast.makeText(getContext(), "Could not add today's " +
                                 "log to habit. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResetIconClicked(int position, ImageView checkIcon, ImageView resetIcon,HabitLogAdapter.UpdatePillCallback callback ) {
+                Habit habit = habits.get(position);
+                habitService.getProgressOfHabit(habit.getId(), new ServiceQueryCallback<HabitProgress>() {
+                    @Override
+                    public void onObjectsExist(List<HabitProgress> objects) {
+                        HabitProgress lastProgress = objects.get(objects.size()-1);
+                        habitService.deleteProgressFromHabit(lastProgress.getId(), new ServiceDeleteCallback() {
+                            @Override
+                            public void onDeleted() {
+                                Toast.makeText(getContext(), "Removes today's log from habit.",
+                                        Toast.LENGTH_SHORT).show();
+                                checkIcon.setVisibility(View.VISIBLE);
+                                resetIcon.setVisibility(View.INVISIBLE);
+                                callback.updatePills();
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Toast.makeText(getContext(), "Could not reset. Please try again", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        Log.e(TAG, String.format("Failed fetching habit progress for %s", habit.getId()));
                     }
                 });
             }

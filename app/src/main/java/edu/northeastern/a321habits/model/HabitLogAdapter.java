@@ -59,10 +59,10 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
     public void onBindViewHolder(@NonNull HabitLogAdapter.ViewHolder holder, int position) {
         Habit habit = habits.get(position);
         holder.activityName.setText(habit.getName());
-        updateProgressPills(habit, holder.pills, holder.checkIcon);
+        updateProgressPills(habit, holder.pills, holder.checkIcon, holder.resetIcon);
     }
 
-    private void updateProgressPills(Habit habit, List<View> pills, ImageView checkIcon) {
+    private void updateProgressPills(Habit habit, List<View> pills, ImageView checkIcon,ImageView resetIcon) {
         Drawable emptyPill = ResourcesCompat
                 .getDrawable(context.getResources(),R.drawable.vertical_pill,null);
         for (View pill: pills) {
@@ -95,6 +95,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
                             }
                             if (DateUtils.isSameDay(habitProgress.getDateLogged().toDate(), today)) {
                                 checkIcon.setVisibility(View.INVISIBLE);
+                                resetIcon.setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -207,9 +208,18 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
                             resetIcon, new UpdatePillCallback() {
                 @Override
                 public void updatePills() {
-                    updateProgressPills(habits.get(getAdapterPosition()), pills ,checkIcon);
+                    updateProgressPills(habits.get(getAdapterPosition()), pills ,checkIcon,resetIcon);
                 }
             }));
+
+            resetIcon.setOnClickListener(view ->
+                    clickListeners.onResetIconClicked(getAdapterPosition(), checkIcon,
+                            resetIcon, new UpdatePillCallback() {
+                                @Override
+                                public void updatePills() {
+                                    updateProgressPills(habits.get(getAdapterPosition()), pills ,checkIcon,resetIcon);
+                                }
+                            }));
         }
     }
 

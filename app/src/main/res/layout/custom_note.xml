@@ -22,14 +22,32 @@
         android:gravity="start|top"
         android:inputType="textMultiLine" />
 
-    <Button
-        android:id="@+id/note_submit_button"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="end"
-        android:backgroundTint="@color/button"
-        android:text="Add Note" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/note_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="end"
+            android:backgroundTint="@color/button"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/note_submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="35dp"
+            android:layout_gravity="end"
+            android:backgroundTint="@color/button"
+            android:text="Add Note" />
+    </LinearLayout>
+
 
 
 </LinearLayout>

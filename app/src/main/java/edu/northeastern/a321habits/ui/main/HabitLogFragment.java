@@ -322,6 +322,7 @@ public class HabitLogFragment extends Fragment {
                 final EditText noteText = noteDialog.findViewById(R.id.editTextTextMultiLine);
                 noteText.setText(notes);
                 Button submitNoteButton = noteDialog.findViewById(R.id.note_submit_button);
+                Button cancelNoteButton = noteDialog.findViewById(R.id.note_cancel_button);
                 submitNoteButton.setOnClickListener(view -> {
                     String text = noteText.getText().toString();
                     if (text.isEmpty()) {
@@ -347,6 +348,12 @@ public class HabitLogFragment extends Fragment {
 
                     noteText.setText("");
                     noteDialog.dismiss();
+                });
+                cancelNoteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        noteDialog.dismiss();
+                    }
                 });
                 noteDialog.show();
 
@@ -404,6 +411,7 @@ public class HabitLogFragment extends Fragment {
         //Initializing the views of the dialog.
         final EditText nameEt = dialog.findViewById(R.id.name_et);
         Button submitButton = dialog.findViewById(R.id.submit_button);
+        Button cancelActivityButton = dialog.findViewById(R.id.cancel_button);
 
         submitButton.setOnClickListener(v -> {
             String activityName = nameEt.getText().toString();
@@ -446,6 +454,13 @@ public class HabitLogFragment extends Fragment {
             dialog.dismiss();
 
         });
+        cancelActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 

@@ -4,7 +4,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
 
-public interface ServiceQueryCallback<T> {
-    void onObjectsExist(List<T> objects);
+public interface ServiceQueryPaginatedCallback<T> {
+    void onObjectsExistPaginate(List<T> objects, DocumentSnapshot lastVisible);
     void onFailure();
 }
+
+

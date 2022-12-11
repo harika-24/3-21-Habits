@@ -44,15 +44,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         // setting data to our text views from our modal class.
         HabitLogModel habit_log = habitLogsArrayList.get(position);
         holder.habitTitleTV.setText(habit_log.getTitle());
-        holder.userNameTV.setText(habit_log.getUser().getFullName());
+        holder.userNameTV.setText(habit_log.getUser().getName());
         holder.logDateTimeTV.setText(habit_log.getCreatedAt());
         holder.dayNumTV.setText("DAY " + habit_log.getDay());
         Picasso.get().setLoggingEnabled(true);
 
-        Picasso.get().load(habit_log.getUser().getProfilePic()).fit().centerCrop()
-                .placeholder(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
-                .error(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
-                .into(holder.userProfilePicIV);
+
+        String userProfilePic = habit_log.getUser().getProfilePic();
+        if(!Objects.equals(userProfilePic, "")) {
+            Picasso.get().load(userProfilePic).fit().centerCrop()
+                    .placeholder(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
+                    .error(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
+                    .into(holder.userProfilePicIV);
+        }
+        else {
+            Picasso.get().load(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
+                    .into(holder.userProfilePicIV);
+        }
+
 
         // load image only if exists
         String habitLogImage = habit_log.getImageURL();

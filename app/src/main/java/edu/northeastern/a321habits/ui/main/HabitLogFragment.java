@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.northeastern.a321habits.DateUtil;
 import edu.northeastern.a321habits.R;
 import edu.northeastern.a321habits.SharedPrefUtil;
 import edu.northeastern.a321habits.daos.habit.HabitDao;
@@ -78,6 +79,7 @@ public class HabitLogFragment extends Fragment {
     private HabitLogAdapter adapter;
     private RecyclerView recyclerView;
     private List<Habit> habits = new ArrayList<>();
+    private Session currentSession;
     private String notes;
     private HabitServiceI habitService;
     private ActivityResultLauncher<Uri> mCaptureImage;
@@ -170,6 +172,7 @@ public class HabitLogFragment extends Fragment {
                     public void onObjectsExist(List<Session> objects) {
                         if (objects.size() > 0) {
                             Session session = objects.get(0);
+                            currentSession = session;
                             SharedPrefUtil.addCurrentSession(session.getSessionId(), getContext());
                             habitService.findHabitsOfSession(SharedPrefUtil.getCurrentSession(getContext()), new ServiceQueryCallback<Habit>() {
                                 @Override
@@ -195,6 +198,7 @@ public class HabitLogFragment extends Fragment {
 
                     @Override
                     public void onFailure() {
+                        currentSession = null;
                         Toast.makeText(getContext(), "Failed to fetch current session. Try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -311,7 +315,7 @@ public class HabitLogFragment extends Fragment {
             public void onNoteIconClicked(int position) {
                 final Dialog noteDialog = new Dialog(getActivity());
                 noteDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                //The user will be able to cancel the dialog by clicking anywhere outside the dialog.
+                //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
                 noteDialog.setCancelable(true);
                 //Mention the name of the layout of your custom dialog.
                 noteDialog.setContentView(R.layout.custom_note);
@@ -353,10 +357,17 @@ public class HabitLogFragment extends Fragment {
                                            ImageView resetIcon,
                                            HabitLogAdapter.UpdatePillCallback callback) {
                 Habit habit = habits.get(adapterPosition);
+
                 String currentUserHandle = SharedPrefUtil.getHandleOfLoggedInUser(getContext());
+
+                Date logDate = new Date();
+                Timestamp logTimestamp = new Timestamp(logDate);
+                int progressDay = DateUtil.getDaysBetween(currentSession.getStartDate().toDate(), logDate);
+
+                Log.d("HABIT LOG", "days between calculated as = "+progressDay);
                 HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
-                        null, new Timestamp(new Date()),
-                        true, null, currentUserHandle, habit.getName());
+                        null, logTimestamp,
+                        true, null, currentUserHandle,habit.getName(), progressDay);
                 habitService.addProgressToHabit(habitProgress, currentUserHandle, new ServiceAddCallback() {
                     @Override
                     public void onCreated(String uniqueId) {
@@ -441,16 +452,20 @@ public class HabitLogFragment extends Fragment {
     private void createNewSessionAndAdd(String activityName) {
         SessionServiceI sessionService = new SessionService(new SessionDao());
         LocalDate localDate = LocalDate.now();
-        sessionService.createSession(new Session(null,
-                        SharedPrefUtil.getHandleOfLoggedInUser(getContext()),
-                        new Timestamp(localDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0),
-                        new Timestamp(localDate.plusDays(21).atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0),
-                        false),
+
+        Session newSession = new Session(null,
+                SharedPrefUtil.getHandleOfLoggedInUser(getContext()),
+                new Timestamp(localDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0),
+                new Timestamp(localDate.plusDays(21).atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0),
+                false);
+        currentSession = newSession;
+        sessionService.createSession(newSession,
                 new ServiceAddCallback() {
                     @Override
                     public void onCreated(String sessionId) {
                         Toast.makeText(getContext(), "Created a new session.", Toast.LENGTH_LONG).show();
                         SharedPrefUtil.addCurrentSession(sessionId, getContext());
+
                         habitService.createHabit(new Habit("", activityName, sessionId), new ServiceAddCallback() {
                             @Override
                             public void onCreated(String habitId) {

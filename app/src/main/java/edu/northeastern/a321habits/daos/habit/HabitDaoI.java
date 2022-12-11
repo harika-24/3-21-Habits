@@ -1,5 +1,7 @@
 package edu.northeastern.a321habits.daos.habit;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.Map;
 
 import edu.northeastern.a321habits.daos.FireStoreUpdateCallback;
@@ -16,7 +18,7 @@ public interface HabitDaoI {
     void deleteHabit(String habitId, FirestoreDeleteCallback callback);
     void addProgressToHabit(HabitProgress progress, String currentUser, FirestoreAddCallback callback);
     void deleteProgressFromHabit(String habitProgressId, FirestoreDeleteCallback callback);
-    void findHabitProgressOfOthers(String currentUser, FirestoreQueryCallback callback);
+    void findHabitProgressOfOthers(String currentUser, DocumentSnapshot lastVisible, FirestoreQueryCallback callback);
 
     void updateHabitProgress(String id, Map<String, Object> updateObject,
                              FireStoreUpdateCallback callback);

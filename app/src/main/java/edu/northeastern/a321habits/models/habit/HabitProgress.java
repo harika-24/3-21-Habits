@@ -10,6 +10,7 @@ public class HabitProgress {
     private Timestamp dateLogged;
     private boolean isCompleted;
     private String note;
+    private int logDay;
 
     public String getUserId() {
         return userId;
@@ -45,7 +46,7 @@ public class HabitProgress {
 
     public HabitProgress(String habitId, String photoUrl, Timestamp photoUploadDate,
                          Timestamp dateLogged, boolean isCompleted, String note, String userId,
-                         String name) {
+                         String name, int logDay) {
         this.habitId = habitId;
         this.photoUrl = photoUrl;
         this.photoUploadDate = photoUploadDate;
@@ -54,9 +55,15 @@ public class HabitProgress {
         this.note = note;
         this.userId = userId;
         this.name = name;
+        this.logDay = logDay;
     }
 
     public String getName() {
         return name;
     }
+
+    public int getLogDay() {
+        return logDay;
+    }
+
 }

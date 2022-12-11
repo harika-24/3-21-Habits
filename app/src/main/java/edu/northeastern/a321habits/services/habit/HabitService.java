@@ -1,6 +1,9 @@
 package edu.northeastern.a321habits.services.habit;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -18,6 +21,7 @@ import edu.northeastern.a321habits.models.habit.HabitProgress;
 import edu.northeastern.a321habits.services.ServiceAddCallback;
 import edu.northeastern.a321habits.services.ServiceDeleteCallback;
 import edu.northeastern.a321habits.services.ServiceQueryCallback;
+import edu.northeastern.a321habits.services.ServiceQueryPaginatedCallback;
 import edu.northeastern.a321habits.services.ServiceUpdateCallback;
 
 public class HabitService implements HabitServiceI {
@@ -55,6 +59,12 @@ public class HabitService implements HabitServiceI {
             public void onQuerySucceeds(QuerySnapshot snapshot) {
                 List<HabitProgress> habitList = new ArrayList<>();
                 for (QueryDocumentSnapshot document: snapshot) {
+
+                    int progressDay = 1;
+                    if (document.getString("progressDay") != null) {
+                        progressDay = (int) document.get("progressDay");
+                    }
+
                     HabitProgress habitProgress =
                             new HabitProgress(document.getString("habitId"),
                                     document.getString("photoUrl"),
@@ -63,7 +73,8 @@ public class HabitService implements HabitServiceI {
                                     Boolean.TRUE.equals(document.getBoolean("completed")),
                                     document.getString("note"),
                                     document.getString("userId"),
-                                    document.getString("name"));
+                                    document.getString("name"),
+                                    progressDay);
                     habitList.add(habitProgress);
                 }
                 callback.onObjectsExist(habitList);
@@ -137,12 +148,22 @@ public class HabitService implements HabitServiceI {
     }
 
     @Override
-    public void findHabitProgressOfOthers(String currentUser, ServiceQueryCallback<HabitProgress> callback) {
-        habitDao.findHabitProgressOfOthers(currentUser, new FirestoreQueryCallback() {
+    public void findHabitProgressOfOthers(String currentUser, DocumentSnapshot lastVisible, ServiceQueryPaginatedCallback<HabitProgress> callback) {
+        habitDao.findHabitProgressOfOthers(currentUser, lastVisible, new FirestoreQueryCallback() {
             @Override
             public void onQuerySucceeds(QuerySnapshot snapshot) {
                 List<HabitProgress> habitProgresses = new ArrayList<>();
+
+                DocumentSnapshot lastVisible = snapshot.getDocuments()
+                        .get(snapshot.size() -1);
+
                 for (QueryDocumentSnapshot document : snapshot) {
+                    // todo: remove this condition when database becomes backward compatible and
+                    //  all records have a progressDay field
+                    int progressDay = 1;
+                    if (document.getString("progressDay") != null) {
+                        progressDay = (int) document.get("progressDay");
+                    }
                     habitProgresses.add(new HabitProgress(document.getString("habitId"),
                             document.getString("photoUrl"),
                             document.getTimestamp("photoUploadDate"),
@@ -150,9 +171,11 @@ public class HabitService implements HabitServiceI {
                             Boolean.TRUE.equals(document.getBoolean("completed")),
                             document.getString("note"),
                             document.getString("userId"),
-                            document.getString("name")));
+                            document.getString("name"),
+                            progressDay));
                 }
-                callback.onObjectsExist(habitProgresses);
+                Log.d("HABIT SCROLL","VALUE OF LASTvISIBLE" +lastVisible.toString());
+                callback.onObjectsExistPaginate(habitProgresses, lastVisible);
             }
 
             @Override

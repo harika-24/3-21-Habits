@@ -15,9 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.northeastern.a321habits.DateUtil;
 import edu.northeastern.a321habits.R;
 import edu.northeastern.a321habits.daos.habit.HabitDao;
 import edu.northeastern.a321habits.databinding.FragmentFeedBinding;
@@ -28,6 +31,7 @@ import edu.northeastern.a321habits.models.habit.HabitProgress;
 import edu.northeastern.a321habits.models.user.User;
 import edu.northeastern.a321habits.services.ServiceGetCallback;
 import edu.northeastern.a321habits.services.ServiceQueryCallback;
+import edu.northeastern.a321habits.services.ServiceQueryPaginatedCallback;
 import edu.northeastern.a321habits.services.habit.HabitService;
 import edu.northeastern.a321habits.services.habit.HabitServiceI;
 import edu.northeastern.a321habits.services.user.UserService;
@@ -47,6 +51,7 @@ public class FeedFragment extends Fragment {
     private FeedAdapter feedRVAdapter;
     private ProgressBar loadingPB;
     private NestedScrollView nestedSV;
+    private DocumentSnapshot lastVisible = null;
 
     public static FeedFragment newInstance(int index) {
         FeedFragment fragment = new FeedFragment();
@@ -56,8 +61,6 @@ public class FeedFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
     }
 
@@ -75,9 +78,8 @@ public class FeedFragment extends Fragment {
 
         habitLogArrayList = new ArrayList<>();
 
-
         feedRV.setLayoutManager(new LinearLayoutManager(root.getContext()));
-
+        
         getData(root);
         nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -89,7 +91,7 @@ public class FeedFragment extends Fragment {
                     count++;
                     // on below line we are making our progress bar visible.
                     loadingPB.setVisibility(View.VISIBLE);
-                    if (count < 20) {
+                    if (count < 10) {
                         // on below line we are again calling
                         // a method to load data in our array list.
                         getData(root);
@@ -97,53 +99,33 @@ public class FeedFragment extends Fragment {
                 }
             }
         });
-//        getData(root);
         return root;
     }
 
 
     private void getData(View root) {
-        // todo: connect to database (this need not be a new connection)
-        // todo: get all habit logs other than logged in users
-        // todo: serialize response data into HabitLogModel objects
-        // todo: format date into dd/mm hh:mm, maybe use relative time
 
         feedRV.setVisibility(View.VISIBLE);
-        String imageUrl = "https://i.imgur.com/tGbaZCY.jpg";
-        UserModel user = new UserModel("SWATI", "AGARWAL", imageUrl);
 
         HabitServiceI habitService = new HabitService(new HabitDao());
-        habitService.findHabitProgressOfOthers(getLoggedInUser(), new ServiceQueryCallback<HabitProgress>() {
+        habitService.findHabitProgressOfOthers(getLoggedInUser(), lastVisible, new ServiceQueryPaginatedCallback<HabitProgress>() {
             @Override
-            public void onObjectsExist(List<HabitProgress> objects) {
-                UserServiceI userService = new UserService();
+            public void onObjectsExistPaginate(List<HabitProgress> objects, DocumentSnapshot lastVisibleSnapshot) {
+
                 for (HabitProgress habitProgress: objects) {
-                    userService.getUserById(habitProgress.getUserId(), new ServiceGetCallback<User>() {
-                        @Override
-                        public void onGetExists(User object) {
-                            habitLogArrayList.add(new HabitLogModel(habitProgress.getName(), habitProgress.getPhotoUrl(), habitProgress.getDateLogged().toString(), 7, user));
-
-                            // on below line we are adding our array list to our adapter class.
-                            feedRVAdapter = new FeedAdapter(root.getContext(), habitLogArrayList);
-
-                            // on below line we are setting
-                            // adapter to our recycler view.
-                            feedRV.setAdapter(feedRVAdapter);
-                        }
-
-                        @Override
-                        public void onGetDoesNotExist() {
-
-                        }
-
-                        @Override
-                        public void onFailure() {
-
-                        }
-                    });
+                    String imageUrl = "https://i.imgur.com/tGbaZCY.jpg";
+                    UserModel user = new UserModel(habitProgress.getUserId(), imageUrl);
+                    String logDateTime = DateUtil.formatDateTime(habitProgress.getDateLogged().toDate());
+                    habitLogArrayList.add(new HabitLogModel(habitProgress.getName(),
+                            habitProgress.getPhotoUrl(), logDateTime, habitProgress.getLogDay(), user));
 
                 }
+
+                feedRVAdapter = new FeedAdapter(root.getContext(), habitLogArrayList);
+                feedRV.setAdapter(feedRVAdapter);
+                lastVisible = lastVisibleSnapshot;
             }
+
 
             @Override
             public void onFailure() {

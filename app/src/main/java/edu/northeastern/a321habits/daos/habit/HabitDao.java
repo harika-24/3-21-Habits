@@ -76,9 +76,23 @@ public class HabitDao implements HabitDaoI {
     }
 
     @Override
-    public void findHabitProgressOfOthers(String currentUser, FirestoreQueryCallback callback) {
-        Query query = db.collection(HABIT_PROGRESS_COLLECTION).whereNotEqualTo("handle", currentUser);
-        callOnComplete(query, callback);
+    public void findHabitProgressOfOthers(String currentUser, DocumentSnapshot lastVisible, FirestoreQueryCallback callback) {
+
+        if (lastVisible != null) {
+            Log.d("HABIT SCROLL HABIT DAO", lastVisible.toString());
+            Query query = db.collection(HABIT_PROGRESS_COLLECTION)
+                    .orderBy("dateLogged", Query.Direction.DESCENDING)
+                    .startAfter(lastVisible)
+                    .limit(10);
+            callOnComplete(query, callback);
+        } else {
+            Log.d("HABIT SCROLL HABIT DAO", "null");
+            Query query = db.collection(HABIT_PROGRESS_COLLECTION)
+                    .orderBy("dateLogged", Query.Direction.DESCENDING)
+                    .limit(10);
+            callOnComplete(query, callback);
+        }
+
     }
 
     @Override

@@ -10,5 +10,5 @@
     <color name="button">#1EACEC</color>
     <color name = "text">#0694D5</color>
     <color name ="navbar">#05A0E6</color>
-    <color name="transparent">#1AFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

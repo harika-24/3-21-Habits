@@ -117,8 +117,8 @@ public class FeedFragment extends Fragment {
                 }
 
                 for (HabitProgress habitProgress: objects) {
-                    String imageUrl = "https://i.imgur.com/tGbaZCY.jpg";
-                    UserModel user = new UserModel(habitProgress.getUserId(), imageUrl);
+
+                    UserModel user = new UserModel(habitProgress.getUserId(), "abc");
                     String logDateTime = DateUtil.formatDateTime(habitProgress.getDateLogged().toDate());
                     habitLogArrayList.add(new HabitLogModel(habitProgress.getName(),
                             habitProgress.getPhotoUrl(), logDateTime, habitProgress.getLogDay(), user));

@@ -52,12 +52,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         String userProfilePic = habit_log.getUser().getProfilePic();
         if(!Objects.equals(userProfilePic, "")) {
-            Picasso.get().load(userProfilePic).fit().centerCrop()
+            Picasso.get().load(userProfilePic)
                     .placeholder(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
                     .error(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
                     .into(holder.userProfilePicIV);
         }
         else {
+            Log.d("HABIT FEED", "going to show user account icon");
             Picasso.get().load(R.drawable.ic_account_circle_fill0_wght400_grad0_opsz48)
                     .into(holder.userProfilePicIV);
         }

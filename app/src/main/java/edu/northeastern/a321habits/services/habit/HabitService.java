@@ -36,13 +36,14 @@ public class HabitService implements HabitServiceI {
     public HabitService(HabitDaoI habitDao) {
         this.habitDao = habitDao;
     }
+
     @Override
     public void findHabitsOfSession(String sessionId, ServiceQueryCallback<Habit> callback) {
         habitDao.findHabitsOfSession(sessionId, new FirestoreQueryCallback() {
             @Override
             public void onQuerySucceeds(QuerySnapshot snapshot) {
                 List<Habit> habitList = new ArrayList<>();
-                for (QueryDocumentSnapshot document: snapshot) {
+                for (QueryDocumentSnapshot document : snapshot) {
                     Habit habit = new Habit(document.getId(), document.getString("name"), sessionId);
                     habitList.add(habit);
                 }
@@ -62,11 +63,11 @@ public class HabitService implements HabitServiceI {
             @Override
             public void onQuerySucceeds(QuerySnapshot snapshot) {
                 List<HabitProgress> habitList = new ArrayList<>();
-                for (QueryDocumentSnapshot document: snapshot) {
+                for (QueryDocumentSnapshot document : snapshot) {
 
                     int progressDay = 1;
                     if (document.get("logDay") != null) {
-                        progressDay = ((Long)document.get("logDay")).intValue();
+                        progressDay = ((Long) document.get("logDay")).intValue();
                     }
 
                     HabitProgress habitProgress =
@@ -164,14 +165,14 @@ public class HabitService implements HabitServiceI {
                 }
 
                 DocumentSnapshot lastVisible = snapshot.getDocuments()
-                        .get(snapshot.size() -1);
+                        .get(snapshot.size() - 1);
 
                 for (QueryDocumentSnapshot document : snapshot) {
                     // todo: remove this condition when database becomes backward compatible and
                     //  all records have a progressDay field
                     int progressDay = 1;
                     if (document.get("logDay") != null) {
-                        progressDay = ((Long)document.get("logDay")).intValue();
+                        progressDay = ((Long) document.get("logDay")).intValue();
                     }
                     habitProgresses.add(new HabitProgress(document.getString("habitId"),
                             document.getString("photoUrl"),
@@ -184,7 +185,7 @@ public class HabitService implements HabitServiceI {
                             progressDay,
                             document.getId()));
                 }
-                Log.d("HABIT SCROLL","VALUE OF LASTvISIBLE" +lastVisible.toString());
+                Log.d("HABIT SCROLL", "VALUE OF LASTvISIBLE" + lastVisible.toString());
                 callback.onObjectsExistPaginate(habitProgresses, lastVisible);
             }
 
@@ -216,7 +217,7 @@ public class HabitService implements HabitServiceI {
             @Override
             public void onQuerySucceeds(QuerySnapshot snapshot) {
                 List<HabitProgress> progressList = new ArrayList<>();
-                for (QueryDocumentSnapshot document: snapshot) {
+                for (QueryDocumentSnapshot document : snapshot) {
                     try {
                         HabitProgress habitProgress =
                                 new HabitProgress(document.getString("habitId"),
@@ -259,13 +260,12 @@ public class HabitService implements HabitServiceI {
                 for (QueryDocumentSnapshot document : snapshot) {
                     String habitId = document.getString("habitId");
                     String habitName = document.getString("name");
-                    Integer progressDay = ((Long)document.get("logDay")).intValue();
+                    Integer progressDay = ((Long) document.get("logDay")).intValue();
 
                     habitIDtoName.put(habitId, habitName);
                     if (habitIDtoLoggedDays.get(habitId) != null) {
                         habitIDtoLoggedDays.get(habitId).add(progressDay);
-                    }
-                    else {
+                    } else {
                         habitIDtoLoggedDays.put(habitId, new ArrayList<>());
                         habitIDtoLoggedDays.get(habitId).add(progressDay);
                     }
@@ -281,11 +281,11 @@ public class HabitService implements HabitServiceI {
                     Log.d("HABIT SUMMARY log days", days.toString());
 
                     int consecutiveDays = 1;
-                    for (int i = 1; i<days.size(); i++) {
-                        if (days.get(i) - days.get(i-1) == 1) {
+                    for (int i = 1; i < days.size(); i++) {
+                        if (days.get(i) - days.get(i - 1) == 1) {
                             consecutiveDays++;
                         }
-                        if(consecutiveDays == 7) {
+                        if (consecutiveDays == 7) {
                             Log.d("HABIT SUMMARY", "streak found!!!!");
                             streakCount++;
                             consecutiveDays = 1;
@@ -307,58 +307,4 @@ public class HabitService implements HabitServiceI {
         });
     }
 
-//    @Override
-//    public void findHabitProgressOfOthers(String currentUser, ServiceQueryCallback<HabitProgress> callback) {
-//        UserServiceI userService = new UserService();
-//        userService.getOtherUsers(currentUser, new ServiceQueryCallback<User>() {
-//            @Override
-//            public void onObjectsExist(List<User> objects) {
-//                SessionServiceI sessionService = new SessionService(new SessionDao());
-//                for (User user: objects) {
-//                    sessionService.findSessionsOfUser(user.getId(), new ServiceQueryCallback<Session>() {
-//                        @Override
-//                        public void onObjectsExist(List<Session> objects) {
-//                            HabitServiceI habitServiceI = new HabitService(new HabitDao());
-//                            for (Session session: objects) {
-//                                habitServiceI.findHabitsOfSession(session.getSessionId(), new ServiceQueryCallback<Habit>() {
-//                                    @Override
-//                                    public void onObjectsExist(List<Habit> objects) {
-//                                        for(Habit habit: objects) {
-//                                            habitServiceI.getProgressOfHabit(habit.getId(), new ServiceQueryCallback<HabitProgress>() {
-//                                                @Override
-//                                                public void onObjectsExist(List<HabitProgress> objects) {
-//                                                    callback.onObjectsExist(objects);
-//                                                }
-//
-//                                                @Override
-//                                                public void onFailure() {
-//                                                    callback.onFailure();
-//                                                }
-//                                            });
-//                                        }
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure() {
-//                                        callback.onFailure();
-//                                    }
-//                                });
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure() {
-//                            callback.onFailure();
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure() {
-//                callback.onFailure();
-//            }
-//        });
-//    }
 }

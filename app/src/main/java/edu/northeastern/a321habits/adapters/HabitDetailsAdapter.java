@@ -42,6 +42,8 @@ public class HabitDetailsAdapter extends RecyclerView.Adapter<HabitDetailsAdapte
         holder.dayView.setText(String.format("Day %s", habitProgress.getLogDay()));
         if (habitProgress.getNote() != null && !habitProgress.getNote().equals("")) {
             holder.noteView.setText(habitProgress.getNote());
+        } else {
+            holder.noteView.setText("No note.");
         }
         String completedText = habitProgress.isCompleted() ? "Completed" : "Incomplete";
         holder.completedView.setText(completedText);

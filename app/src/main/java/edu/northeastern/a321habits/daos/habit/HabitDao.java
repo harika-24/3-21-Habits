@@ -41,7 +41,9 @@ public class HabitDao implements HabitDaoI {
 
     @Override
     public void getProgressOfHabit(String habitId, FirestoreQueryCallback callback) {
-        Query query = db.collection(HABIT_PROGRESS_COLLECTION).whereEqualTo("habitId", habitId);
+        Query query = db.collection(HABIT_PROGRESS_COLLECTION)
+                .whereEqualTo("habitId", habitId)
+                .orderBy("dateLogged", Query.Direction.DESCENDING);
         callOnComplete(query, callback);
     }
 

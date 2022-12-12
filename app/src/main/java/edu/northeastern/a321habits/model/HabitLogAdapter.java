@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,6 +60,8 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
     public void onBindViewHolder(@NonNull HabitLogAdapter.ViewHolder holder, int position) {
         Habit habit = habits.get(position);
         holder.activityName.setText(habit.getName());
+        holder.checkIcon.setVisibility(View.VISIBLE);
+        holder.resetIcon.setVisibility(View.INVISIBLE);
         updateProgressPills(habit, holder.pills, holder.checkIcon, holder.resetIcon);
     }
 
@@ -93,7 +96,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
                             } else {
                                 pills.get(daysDifference).setBackground(ResourcesCompat.getDrawable(context.getResources(),R.drawable.vertical_pill,null));
                             }
-                            if (DateUtils.isSameDay(habitProgress.getDateLogged().toDate(), today)) {
+                            if (DateUtils.isSameDay(habitProgress.getDateLogged().toDate(), today) && habitProgress.isCompleted()) {
                                 checkIcon.setVisibility(View.INVISIBLE);
                                 resetIcon.setVisibility(View.VISIBLE);
                             }
@@ -133,6 +136,8 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
         private final ImageView checkIcon;
         private final ImageView resetIcon;
 
+        private final ConstraintLayout cardConstraintLayout;
+
         private final View pill1;
         private final View pill2;
         private final View pill3;
@@ -167,6 +172,7 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
             notesIcon = itemView.findViewById(R.id.notes);
             checkIcon = itemView.findViewById(R.id.check);
             resetIcon = itemView.findViewById(R.id.reset);
+            cardConstraintLayout = itemView.findViewById(R.id.cardViewLayout);
 
             pill1 = itemView.findViewById(R.id.pill_1);
             pill2 = itemView.findViewById(R.id.pill_2);
@@ -220,6 +226,14 @@ public class HabitLogAdapter extends RecyclerView.Adapter<HabitLogAdapter.ViewHo
                                     updateProgressPills(habits.get(getAdapterPosition()), pills ,checkIcon,resetIcon);
                                 }
                             }));
+
+            cardConstraintLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    clickListeners.onCardLongPressed(getAdapterPosition());
+                    return true;
+                }
+            });
         }
     }
 

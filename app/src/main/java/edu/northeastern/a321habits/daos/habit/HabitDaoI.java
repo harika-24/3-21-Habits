@@ -22,4 +22,6 @@ public interface HabitDaoI {
 
     void updateHabitProgress(String id, Map<String, Object> updateObject,
                              FireStoreUpdateCallback callback);
+
+    void getProgressByDayByHabitId(int day, String habitId, FirestoreQueryCallback callback);
 }

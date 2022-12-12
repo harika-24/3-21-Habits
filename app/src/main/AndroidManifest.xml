@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.northeastern.a321habits">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="true" />
@@ -24,6 +25,9 @@
         android:theme="@style/Theme.321Habits"
         tools:targetApi="31">
         <activity
+            android:name=".HabitDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -38,8 +42,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.321Habits.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.321Habits.NoActionBar"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

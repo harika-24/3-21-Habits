@@ -94,6 +94,8 @@ public class HabitLogFragment extends Fragment {
     private StorageReference storageReference;
     private int positionSelected;
     private Date photoUploadDate;
+    private TextView currentDayTV;
+
 
     public static HabitLogFragment newInstance(int index) {
         HabitLogFragment fragment = new HabitLogFragment();
@@ -171,6 +173,8 @@ public class HabitLogFragment extends Fragment {
 
         newActivityBtn = root.findViewById(R.id.floatingActionButton2);
 
+        currentDayTV = root.findViewById(R.id.tv_current_session_day);
+
         SessionServiceI sessionService = new SessionService(new SessionDao());
         sessionService.getCurrentSession(SharedPrefUtil.getHandleOfLoggedInUser(getContext()),
                 new ServiceQueryCallback<Session>() {
@@ -179,6 +183,8 @@ public class HabitLogFragment extends Fragment {
                         if (objects.size() > 0) {
                             Session session = objects.get(0);
                             currentSession = session;
+
+                            updateCurrentDayofSession();
                             SharedPrefUtil.addCurrentSession(session.getSessionId(), getContext());
                             habitService.findHabitsOfSession(SharedPrefUtil.getCurrentSession(getContext()), new ServiceQueryCallback<Habit>() {
                                 @Override
@@ -611,5 +617,11 @@ public class HabitLogFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    void updateCurrentDayofSession() {
+        Log.d("HABIT SESSION", currentSession.getStartDate().toString());
+        int days = DateUtil.getDaysBetween(currentSession.getStartDate().toDate(), new Date());
+        currentDayTV.setText("DAY "+ String.valueOf(days) + " of 21");
     }
 }

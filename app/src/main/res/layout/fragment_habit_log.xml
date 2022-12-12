@@ -8,11 +8,22 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.HabitLogFragment">
 
+    <TextView
+        android:id="@+id/tv_current_session_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="DAY 5 of 21"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
+
     <!--linear layout for displaying
     our recycler view-->
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_current_session_day"
         android:orientation="vertical">
 
         <!--recycler view for displaying our list of data

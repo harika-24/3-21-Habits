@@ -16,4 +16,5 @@ public interface SessionDaoI {
     void deleteSession(String sessionId, FirestoreDeleteCallback callback);
     void getCurrentSession(String currentUser, FirestoreQueryCallback callback);
     void updateSession(Map<String, Object> updateObject, FireStoreUpdateCallback callback);
+    void getCompletedSessions(String userId, FirestoreQueryCallback callback);
 }

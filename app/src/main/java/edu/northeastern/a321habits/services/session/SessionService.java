@@ -139,4 +139,26 @@ public class SessionService implements SessionServiceI {
             }
         });
     }
+
+    @Override
+    public void getCompletedSessions(String userId, ServiceQueryCallback<Session> callback) {
+        sessionDao.getCompletedSessions(userId, new FirestoreQueryCallback() {
+            @Override
+            public void onQuerySucceeds(QuerySnapshot snapshot) {
+                List<Session> sessions = new ArrayList<>();
+                for (QueryDocumentSnapshot document: snapshot) {
+                    sessions.add(new Session(document.getId(), document.getString("userId"),
+                            document.getTimestamp("startDate"),
+                            document.getTimestamp("endDate"),
+                            Boolean.TRUE.equals(document.getBoolean("hasEnded"))));
+                }
+                callback.onObjectsExist(sessions);
+            }
+
+            @Override
+            public void failure() {
+                callback.onFailure();
+            }
+        });
+    }
 }

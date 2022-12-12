@@ -24,4 +24,5 @@ public interface HabitDaoI {
                              FireStoreUpdateCallback callback);
 
     void getProgressByDayByHabitId(int day, String habitId, FirestoreQueryCallback callback);
+    void getAllHabitProgressOfUser(String userId, FirestoreQueryCallback callback);
 }

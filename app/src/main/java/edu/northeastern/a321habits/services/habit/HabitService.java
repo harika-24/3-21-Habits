@@ -260,14 +260,18 @@ public class HabitService implements HabitServiceI {
                 for (QueryDocumentSnapshot document : snapshot) {
                     String habitId = document.getString("habitId");
                     String habitName = document.getString("name");
+                    Boolean completed = (Boolean)document.get("completed");
+
                     Integer progressDay = ((Long) document.get("logDay")).intValue();
 
                     habitIDtoName.put(habitId, habitName);
-                    if (habitIDtoLoggedDays.get(habitId) != null) {
-                        habitIDtoLoggedDays.get(habitId).add(progressDay);
-                    } else {
-                        habitIDtoLoggedDays.put(habitId, new ArrayList<>());
-                        habitIDtoLoggedDays.get(habitId).add(progressDay);
+                    if (completed) {
+                        if (habitIDtoLoggedDays.get(habitId) != null) {
+                            habitIDtoLoggedDays.get(habitId).add(progressDay);
+                        } else {
+                            habitIDtoLoggedDays.put(habitId, new ArrayList<>());
+                            habitIDtoLoggedDays.get(habitId).add(progressDay);
+                        }
                     }
                 }
 

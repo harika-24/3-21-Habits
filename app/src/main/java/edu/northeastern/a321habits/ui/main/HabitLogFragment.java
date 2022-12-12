@@ -206,6 +206,9 @@ public class HabitLogFragment extends Fragment {
                                 }
                             });
                         }
+                        else {
+                            hideDay();
+                        }
                     }
 
                     @Override
@@ -623,5 +626,9 @@ public class HabitLogFragment extends Fragment {
         Log.d("HABIT SESSION", currentSession.getStartDate().toString());
         int days = DateUtil.getDaysBetween(currentSession.getStartDate().toDate(), new Date());
         currentDayTV.setText("DAY "+ String.valueOf(days) + " of 21");
+    }
+
+    private void hideDay() {
+        currentDayTV.setText("Add a habit to begin");
     }
 }

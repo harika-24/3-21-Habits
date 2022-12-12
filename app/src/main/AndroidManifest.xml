@@ -28,6 +28,9 @@
             android:name=".InsightsActivity"
             android:exported="false" />
         <activity
+            android:name=".HabitDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -42,7 +45,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.321Habits.NoActionBar"></activity>
+            android:theme="@style/Theme.321Habits.NoActionBar">
+
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

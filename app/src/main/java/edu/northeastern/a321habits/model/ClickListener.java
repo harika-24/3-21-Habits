@@ -12,4 +12,6 @@ public interface ClickListener {
                             HabitLogAdapter.UpdatePillCallback callback);
 
     void onResetIconClicked(int position, ImageView checkIcon, ImageView resetIcon, HabitLogAdapter.UpdatePillCallback callback );
+
+    void onCardLongPressed(int adapterPosition);
 }

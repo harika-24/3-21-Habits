@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import edu.northeastern.a321habits.daos.FireStoreUpdateCallback;
 import edu.northeastern.a321habits.daos.FirestoreAddCallback;
@@ -64,7 +65,7 @@ public class HabitService implements HabitServiceI {
                 for (QueryDocumentSnapshot document: snapshot) {
 
                     int progressDay = 1;
-                    if (document.get("progressDay") != null) {
+                    if (document.get("logDay") != null) {
                         progressDay = ((Long)document.get("logDay")).intValue();
                     }
 
@@ -157,6 +158,10 @@ public class HabitService implements HabitServiceI {
             @Override
             public void onQuerySucceeds(QuerySnapshot snapshot) {
                 List<HabitProgress> habitProgresses = new ArrayList<>();
+                if (snapshot.getDocuments().size() == 0) {
+                    callback.onObjectsExistPaginate(habitProgresses, null);
+                    return;
+                }
 
                 DocumentSnapshot lastVisible = snapshot.getDocuments()
                         .get(snapshot.size() -1);
@@ -200,6 +205,41 @@ public class HabitService implements HabitServiceI {
 
             @Override
             public void onFailure() {
+                callback.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void getProgressByDayByHabitId(int day, String habitId, ServiceQueryCallback<HabitProgress> callback) {
+        habitDao.getProgressByDayByHabitId(day, habitId, new FirestoreQueryCallback() {
+            @Override
+            public void onQuerySucceeds(QuerySnapshot snapshot) {
+                List<HabitProgress> progressList = new ArrayList<>();
+                for (QueryDocumentSnapshot document: snapshot) {
+                    try {
+                        HabitProgress habitProgress =
+                                new HabitProgress(document.getString("habitId"),
+                                        document.getString("photoUrl"),
+                                        document.getTimestamp("photoUploadDate"),
+                                        document.getTimestamp("dateLogged"),
+                                        Boolean.TRUE.equals(document.getBoolean("completed")),
+                                        document.getString("note"),
+                                        document.getString("userId"),
+                                        document.getString("name"),
+                                        document.getDouble("logDay").intValue(),
+                                        document.getId());
+                        progressList.add(habitProgress);
+                    } catch (Exception e) {
+                        callback.onFailure();
+                    }
+
+                }
+                callback.onObjectsExist(progressList);
+            }
+
+            @Override
+            public void failure() {
                 callback.onFailure();
             }
         });

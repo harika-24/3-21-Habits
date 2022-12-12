@@ -23,5 +23,7 @@ public interface HabitServiceI {
     void findHabitProgressOfOthers(String currentUser, DocumentSnapshot lastVisible, ServiceQueryPaginatedCallback<HabitProgress> callback);
     void updateHabitProgress(String id, Map<String, Object> updateObject,
                              ServiceUpdateCallback callback);
+
+    void getProgressByDayByHabitId(int day, String habitId, ServiceQueryCallback<HabitProgress> callback);
     void getAllHabitProgressOfUser(String userId, ServiceQuerySummaryCallback callback);
 }

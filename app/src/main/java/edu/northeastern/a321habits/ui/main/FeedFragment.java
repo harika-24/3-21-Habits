@@ -112,6 +112,10 @@ public class FeedFragment extends Fragment {
             @Override
             public void onObjectsExistPaginate(List<HabitProgress> objects, DocumentSnapshot lastVisibleSnapshot) {
 
+                if (lastVisibleSnapshot == null) {
+                    return;
+                }
+
                 for (HabitProgress habitProgress: objects) {
                     String imageUrl = "https://i.imgur.com/tGbaZCY.jpg";
                     UserModel user = new UserModel(habitProgress.getUserId(), imageUrl);

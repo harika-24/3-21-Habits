@@ -3,6 +3,7 @@ package edu.northeastern.a321habits.ui.main;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,6 +36,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -47,6 +50,8 @@ import java.util.List;
 import java.util.Map;
 
 import edu.northeastern.a321habits.DateUtil;
+import edu.northeastern.a321habits.HabitDetailsActivity;
+import edu.northeastern.a321habits.MainActivity;
 import edu.northeastern.a321habits.R;
 import edu.northeastern.a321habits.SharedPrefUtil;
 import edu.northeastern.a321habits.daos.habit.HabitDao;
@@ -377,27 +382,71 @@ public class HabitLogFragment extends Fragment {
                 Date logDate = new Date();
                 Timestamp logTimestamp = new Timestamp(logDate);
                 int progressDay = DateUtil.getDaysBetween(currentSession.getStartDate().toDate(), logDate);
-
                 Log.d("HABIT LOG", "days between calculated as = "+progressDay);
-                HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
-                        null, logTimestamp,
-                        true, null, currentUserHandle,habit.getName(), progressDay,"");
-                habitService.addProgressToHabit(habitProgress, currentUserHandle, new ServiceAddCallback() {
+                habitService.getProgressByDayByHabitId(progressDay, habit.getId(), new ServiceQueryCallback<HabitProgress>() {
                     @Override
-                    public void onCreated(String uniqueId) {
-                        Toast.makeText(getContext(), "Added today's log to habit.",
-                                Toast.LENGTH_SHORT).show();
-                        checkIcon.setVisibility(View.INVISIBLE);
-                        resetIcon.setVisibility(View.VISIBLE);
-                        callback.updatePills();
+                    public void onObjectsExist(List<HabitProgress> objects) {
+                        if (objects.size() == 0) {
+                            HabitProgress habitProgress = new HabitProgress(habit.getId(), null,
+                                    null, logTimestamp,
+                                    true, null, currentUserHandle,habit.getName(), progressDay,"");
+                            habitService.addProgressToHabit(habitProgress, currentUserHandle, new ServiceAddCallback() {
+                                @Override
+                                public void onCreated(String uniqueId) {
+                                    Toast.makeText(getContext(), "Added today's log to habit.",
+                                            Toast.LENGTH_SHORT).show();
+                                    checkIcon.setVisibility(View.INVISIBLE);
+                                    resetIcon.setVisibility(View.VISIBLE);
+                                    callback.updatePills();
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Toast.makeText(getContext(), "Could not add today's " +
+                                            "log to habit. Try again.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return;
+                        }
+                        boolean found = false;
+                        HabitProgress toUpdate = null;
+                        for (HabitProgress progress: objects) {
+                            if (progress.getLogDay() == progressDay) {
+                                found = true;
+                                toUpdate = progress;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            Map<String, Object> updateObject = new HashMap<>();
+                            updateObject.put("completed", true);
+                            habitService.updateHabitProgress(habit.getId(), updateObject, new ServiceUpdateCallback() {
+                                @Override
+                                public void onUpdated() {
+                                    Toast.makeText(getContext(), "Progress updated.", Toast.LENGTH_SHORT).show();
+                                    checkIcon.setVisibility(View.INVISIBLE);
+                                    resetIcon.setVisibility(View.VISIBLE);
+                                    callback.updatePills();
+                                }
+
+                                @Override
+                                public void onFailure() {
+                                    Toast.makeText(getContext(), "Could not update progress. Try again.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
                     }
 
                     @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getContext(), "Could not add today's " +
-                                "log to habit. Try again.", Toast.LENGTH_SHORT).show();
+                    public void onFailure() {
+                        Toast.makeText(getContext(), "Could not update progress. Try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
+
+
             }
 
             @Override
@@ -406,10 +455,22 @@ public class HabitLogFragment extends Fragment {
                 habitService.getProgressOfHabit(habit.getId(), new ServiceQueryCallback<HabitProgress>() {
                     @Override
                     public void onObjectsExist(List<HabitProgress> objects) {
-                        HabitProgress lastProgress = objects.get(objects.size()-1);
-                        habitService.deleteProgressFromHabit(lastProgress.getId(), new ServiceDeleteCallback() {
+                        Date today = new Date();
+                        HabitProgress progressToUpdate = null;
+                        for (HabitProgress progress: objects) {
+                            if (DateUtils.isSameDay(progress.getDateLogged().toDate(), today)) {
+                                progressToUpdate = progress;
+                            }
+                        }
+                        if (progressToUpdate == null) {
+                            Toast.makeText(getContext(), "Could not reset. Please try again", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Map<String, Object> updateObject = new HashMap<>();
+                        updateObject.put("completed", false);
+                        habitService.updateHabitProgress(habit.getId(), updateObject, new ServiceUpdateCallback() {
                             @Override
-                            public void onDeleted() {
+                            public void onUpdated() {
                                 Toast.makeText(getContext(), "Removes today's log from habit.",
                                         Toast.LENGTH_SHORT).show();
                                 checkIcon.setVisibility(View.VISIBLE);
@@ -418,7 +479,7 @@ public class HabitLogFragment extends Fragment {
                             }
 
                             @Override
-                            public void onFailure(Exception e) {
+                            public void onFailure() {
                                 Toast.makeText(getContext(), "Could not reset. Please try again", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -429,6 +490,14 @@ public class HabitLogFragment extends Fragment {
                         Log.e(TAG, String.format("Failed fetching habit progress for %s", habit.getId()));
                     }
                 });
+            }
+
+            @Override
+            public void onCardLongPressed(int adapterPosition) {
+                Habit habit = habits.get(adapterPosition);
+                Intent intent = new Intent(getContext(), HabitDetailsActivity.class);
+                intent.putExtra("habitId", habit.getId());
+                startActivity(intent);
             }
         });
 

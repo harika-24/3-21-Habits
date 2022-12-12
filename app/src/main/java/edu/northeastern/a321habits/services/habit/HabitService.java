@@ -226,7 +226,8 @@ public class HabitService implements HabitServiceI {
                         habitIDtoLoggedDays.get(habitId).add(progressDay);
                     }
                     else {
-                        habitIDtoLoggedDays.put(habitId, new ArrayList<>(progressDay));
+                        habitIDtoLoggedDays.put(habitId, new ArrayList<>());
+                        habitIDtoLoggedDays.get(habitId).add(progressDay);
                     }
                 }
 
@@ -236,9 +237,11 @@ public class HabitService implements HabitServiceI {
 
                     ArrayList<Integer> days = habit.getValue();
                     Collections.sort(days);
+                    Log.d("HABIT SUMMARY name", habitIDtoName.get(habit.getKey()));
+                    Log.d("HABIT SUMMARY log days", days.toString());
 
                     int consecutiveDays = 1;
-                    for (int i = 1; i< days.size(); i++) {
+                    for (int i = 1; i<days.size(); i++) {
                         if (days.get(i) - days.get(i-1) == 1) {
                             consecutiveDays++;
                         }

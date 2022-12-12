@@ -72,7 +72,7 @@ public class InsightsActivity extends AppCompatActivity {
             @Override
             public void onObjectsExist(List<Session> objects) {
                 if (objects.size() < 2) {
-                    sessionsTextTV.setText("SESSION");
+                    sessionsTextTV.setText("21-DAY SESSION");
                 }
                 String completedSessions = String.valueOf(objects.size());
                 completedSessionNumTV.setText(completedSessions);
